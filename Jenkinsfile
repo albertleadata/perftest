@@ -41,8 +41,8 @@ pipeline {
 			steps {
 			//	Before enabling, review/change ALL occurances of "yourappname"
 			//	to ensure your actual application name is reflected
-				sh 'echo "Testing suspended - aborting"'
-			//	launchPerfTest()
+			//	sh 'echo "Testing suspended - aborting"'
+				launchPerfTest()
 			}
 		}
 	}
