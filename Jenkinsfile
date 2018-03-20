@@ -18,7 +18,7 @@ def publishViaSSH( src, dst) {
 
 def pullJARs( src, dst) {
 	def sDHL = 'jenkins'
-	def sDHN = 'bluejay'
+	def sDHN = 'bluejaydev'
 	def sDPS = '/var/www/html/pub/eptrepo'
 	sh "rsync -ai --no-g --no-p --no-t ${sDHL}@${sDHN}:${sDPS}/${src}/ ${dst}/"
 }
