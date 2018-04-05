@@ -17,7 +17,7 @@ def publishViaSSH( src, dst) {
 //	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//' > rpturl.txt"
 	sh "ls ${src} | grep -v .csv | head -1 > rptloc.txt"
 	sh "echo \"http://${sDHN}/${dst}/\$(cat rptloc.txt)\" > rpturl.txt"
-	sh "echo \"{\\\"req\\\":{\\\"cmd\\\":\\\"jobupd\\\",\\\"id"=\\\"$(cat jobid.txt)\\\",\\\"url\\\"=\\\"$(cat rpturl.txt)\\\"}}\" > req.json"
+	sh "echo \"{\\\"req\\\":{\\\"cmd\\\":\\\"jobupd\\\",\\\"id\\\"=\\\"$(cat jobid.txt)\\\",\\\"url\\\"=\\\"$(cat rpturl.txt)\\\"}}\" > req.json"
 	sh "curl -vX POST http://${sDHN}/index.php -d @req.json"
 }
 
