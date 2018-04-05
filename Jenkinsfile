@@ -10,12 +10,12 @@ def deployViaSSH( war, id) {
 def publishViaSSH( src, dst) {
 	def sDHL = 'jenkins'
 	def sDHN = 'bluejaydev'
-	def sDPS = '/var/www/html/pub/bluejay'
+	def sDPS = '/var/www/html'
 	sh "rsync -ai --no-o --no-g --no-p --no-t ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
 	sh 'echo "#===> RESULTS: please see result/reports at:"'
 //	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//'"
 	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//' > rpturl.txt"
-	sh 'echo "{\"req\":{\"cmd\":\"jobupd\",\"id\"=\"`cat jobid.txt`\",\"url=\"`cat rpturl.txt`\"}}" > req.json'
+	sh 'echo \'{"req":{"cmd":"jobupd","id"="$(cat jobid.txt)","url="$(cat rpturl.txt)"}}\' > req.json'
 	sh "curl -vX POST http://bluejaydev/index.php -d @req.json"
 }
 
@@ -36,7 +36,7 @@ def launchPerfTest() {
 	sh 'mvn jmeter:jmeter'
 	sh 'java -jar target/jmeter/bin/ApacheJMeter-3.3.jar -g target/jmeter/results/$(date +%Y%m%d)-timbrado*.csv -o target/jmeter/results/dashboard'
 	sh 'mv target/jmeter/results/dashboard target/jmeter/results/timbrado-$(date +%Y%m%d%H%M%S)'
-	publishViaSSH( '$(pwd)/target/jmeter/results', "jmeter")
+	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
 }
 
 pipeline {
