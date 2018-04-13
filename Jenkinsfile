@@ -18,7 +18,7 @@ def publishViaSSH( src, dst) {
 	sh "ls ${src} | grep -v .csv | head -1 > rptloc.txt"
 	sh "echo \"http://${sDHN}/${dst}/\$(cat rptloc.txt)\" > rpturl.txt"
 	sh 'echo "{\\"req\\":{\\"cmd\\":\\"tstupd\\",\\"id\\":\\"$(cat jobid.txt)\\",\\"url\\":\\"$(cat rpturl.txt)\\"}}" > req.json'
-	sh "curl -vX POST http://${sDHN}/index.php -d @req.json"
+	sh "curl -vX POST http://${sDHN}/index.php?ctx=api -d @req.json"
 }
 
 def pullJARs( src, dst) {
@@ -33,7 +33,7 @@ def launchPerfTest() {
 	sh 'if [ -r *.csv ]; then cp $(pwd)/*.csv $(pwd)/target/jmeter/bin ; fi'
 	sh 'if [ -r *.jks ]; then cp $(pwd)/*.jks $(pwd)/target/jmeter/bin ; fi'
 	sh 'rm -rf $(pwd)/target/jmeter/results ; mkdir -p $(pwd)/target/jmeter/results'
-	sh "curl -o bjjob.json -vX POST http://bluejaydev/index.php -d '{\"req\":{\"cmd\":\"appjob\",\"id\":\"1\"}}'"
+	sh "curl -o bjjob.json -vX POST http://bluejaydev/index.php?ctx=api -d '{\"req\":{\"cmd\":\"appjob\",\"id\":\"1\"}}'"
 	sh "python -c \"import sys, json; print json.load(sys.stdin)['tst']\" < bjjob.json > jobid.txt"
 	sh 'mvn jmeter:jmeter'
 	sh 'java -jar target/jmeter/bin/ApacheJMeter-3.3.jar -g target/jmeter/results/$(date +%Y%m%d)-timbrado*.csv -o target/jmeter/results/dashboard'
