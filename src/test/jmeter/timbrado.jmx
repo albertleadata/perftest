@@ -458,6 +458,21 @@
               <stringProp name="Argument.value">mosquito</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
+            <elementProp name="AppName" elementType="Argument">
+              <stringProp name="Argument.name">AppName</stringProp>
+              <stringProp name="Argument.value">timbrado</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="TestName" elementType="Argument">
+              <stringProp name="Argument.name">TestName</stringProp>
+              <stringProp name="Argument.value">PoC</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="Agent" elementType="Argument">
+              <stringProp name="Argument.name">Agent</stringProp>
+              <stringProp name="Argument.value">jenkins</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
             <elementProp name="InfluxHost" elementType="Argument">
               <stringProp name="Argument.name">InfluxHost</stringProp>
               <stringProp name="Argument.value">bluejaydev</stringProp>
