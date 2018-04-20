@@ -11,7 +11,7 @@ def publishViaSSH( src, dst) {
 	def sDHL = 'jenkins'
 	def sDHN = 'bluejaydev'
 	def sDPS = '/var/www/html'
-	def iBld = ${env.BUILD_ID}
+	def iBld = "${env.BUILD_ID}"
 	sh "rsync -ai --no-o --no-g --no-p --no-t ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
 	sh 'echo "#===> RESULTS: please see result/reports at:"'
 //	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//'"
