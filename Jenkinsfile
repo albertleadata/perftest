@@ -11,12 +11,13 @@ def publishViaSSH( src, dst) {
 	def sDHL = 'jenkins'
 	def sDHN = 'bluejaydev'
 	def sDPS = '/var/www/html'
+	def iBld = ${env.BUILD_ID}
 	sh "rsync -ai --no-o --no-g --no-p --no-t ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
 	sh 'echo "#===> RESULTS: please see result/reports at:"'
 //	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//'"
 //	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//' > rpturl.txt"
 	sh "ls ${src} | grep -v .csv | head -1 > rptloc.txt"
-	sh "echo \"$ENV.BUILD_ID\" > jobid.txt"
+	sh "echo \"${iBld}\" > jobid.txt"
 	sh "echo \"http://${sDHN}/${dst}/\$(cat rptloc.txt)\" > rpturl.txt"
 	sh 'echo "{\\"req\\":{\\"cmd\\":\\"tstupd\\",\\"id\\":\\"$(cat tstid.txt)\\",\\"job\\":\\"$(cat jobid.txt)\\",\\"url\\":\\"$(cat rpturl.txt)\\"}}" > req.json'
 	sh "curl -vX POST http://${sDHN}/index.php?ctx=api -d @req.json"
