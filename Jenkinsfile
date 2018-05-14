@@ -51,7 +51,18 @@ pipeline {
 			//	Before enabling, review/change ALL occurances of "yourappname"
 			//	to ensure your actual application name is reflected
 			//	sh 'echo "Testing suspended - aborting"'
-				launchPerfTest()
+			//	launchPerfTest()
+				def labels = ['loadgen001','loadgen002']	// labels for Jenkins node types we will build on
+				def builders = [:]
+				for (x in labels) {
+					def label = x
+					builders[label] = {
+						node(label) {
+							launchPerfTest()
+						}
+					}
+				}
+				parallel builders
 			}
 		}
 	}
