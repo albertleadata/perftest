@@ -34,7 +34,7 @@
               </arguments>
             </configuration>
             <goals>
-					<goal>loadgen</goal>
+					<goal>remote-server</goal>
             </goals>
           </execution>
         </executions>
