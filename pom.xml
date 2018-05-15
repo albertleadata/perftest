@@ -17,9 +17,11 @@
             <id>jmeter-tests</id>
             <phase>verify</phase>
             <configuration>
-              <arguments>
-                <argument>-Rbluejay001,bluejay002 -X</argument>
-              </arguments>
+              <remoteConfig>
+                <startServersBeforeTests>true</startServersBeforeTests>
+                <serverList>bluejay001,bluejay002</serverList>
+                <stopServersAfterTests>true</stopServersAfterTests>
+              </remoteConfig>
             </configuration>
             <goals>
 					<goal>jmeter</goal>
