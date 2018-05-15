@@ -47,8 +47,9 @@
             <jmeter.save.saveservice.successful>true</jmeter.save.saveservice.successful>
             <jmeter.save.saveservice.label>true</jmeter.save.saveservice.label>
             <jmeter.save.saveservice.time>true</jmeter.save.saveservice.time>
-            <remote_hosts>bluejay001,bluejay002</remote_hosts>
+            <remote_hosts>bluejay001:1099,bluejay002:1099</remote_hosts>
             <client.rmi.localport>18099</client.rmi.localport>
+            <server.exitaftertest>true</server.exitaftertest>
           </propertiesJMeter>
         </configuration>
       </plugin>
