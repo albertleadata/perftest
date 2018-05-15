@@ -11,13 +11,30 @@
       <plugin>
         <groupId>com.lazerycode.jmeter</groupId>
         <artifactId>jmeter-maven-plugin</artifactId>
-        <version>2.3.0</version>
+        <version>2.7.0</version>
         <executions>
           <execution>
             <id>jmeter-tests</id>
             <phase>verify</phase>
+            <configuration>
+              <arguments>
+                <argument>-Rbluejay001,bluejay002 -X</argument>
+              </arguments>
+            </configuration>
             <goals>
 					<goal>jmeter</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jmeter-loadgen</id>
+            <phase>verify</phase>
+            <configuration>
+              <arguments>
+                <argument>-Dserver_port=1099 -s -j jmeter-server.log</argument>
+              </arguments>
+            </configuration>
+            <goals>
+					<goal>loadgen</goal>
             </goals>
           </execution>
         </executions>
