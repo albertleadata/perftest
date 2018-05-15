@@ -50,7 +50,7 @@ def launchLoadGen() {
 	sh 'if [ -r *.csv ]; then cp $(pwd)/*.csv $(pwd)/target/jmeter/bin ; fi'
 	sh 'if [ -r *.jks ]; then cp $(pwd)/*.jks $(pwd)/target/jmeter/bin ; fi'
 	sh 'rm -rf $(pwd)/target/jmeter/results ; mkdir -p $(pwd)/target/jmeter/results'
-//	sh 'java -jar target/jmeter/bin/ApacheJMeter-4.0.jar -Dserver_port=1099 -s -j jmeter-server.log'
+	sh 'java -jar target/jmeter/bin/ApacheJMeter-4.0.jar -Dserver_port=1099 -s -j jmeter-server.log'
 //	sh 'mvn jmeter:remote-server'
 }
 
@@ -78,9 +78,8 @@ pipeline {
 			//	sh 'echo "Testing suspended - aborting"'
 			//	launchPerfTest()
 				parallel (
-					"bluejay001" : { launchLoadGen() },
 					"bluejay002" : { launchLoadGen() },
-					"master" : { launchPerfTest() }
+					"bluejay001" : { launchPerfTest() }
 				)
 			}
 		}
