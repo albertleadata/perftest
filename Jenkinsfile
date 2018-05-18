@@ -1,3 +1,4 @@
+
 def deployViaSSH( war, id) {
 	def sDHN = 'wwwlogin@wwwhost'
 	def sDPS = '/path/to/j2ee/deployment/location'
@@ -7,29 +8,59 @@ def deployViaSSH( war, id) {
 
 def publishViaSSH( src, dst) {
 	def sDHL = 'jenkins'
-	def sDHN = 'jenkinshost.domain.com'
-	def sDPS = '/home/website/www'
+	def sDHN = 'deployhost'
+	def sDPS = '/var/www/html'
+	def iBld = "${env.BUILD_ID}"
 	sh "rsync -ai --no-o --no-g --no-p --no-t ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
 	sh 'echo "#===> RESULTS: please see result/reports at:"'
-	sh "ls ${src} | grep -v .csv | head -1 | sed 's/^/http:\\/\\/${sDHN}\\/${dst}\\//'"
+	sh "ls ${src} | grep -v .csv | head -1 > rptloc.txt"
+	sh "echo \"${iBld}\" > jobid.txt"
+	sh "echo \"http://${sDHN}/${dst}/\$(cat rptloc.txt)\" > rpturl.txt"
+	sh 'echo "{\\"req\\":{\\"cmd\\":\\"tstupd\\",\\"id\\":\\"$(cat tstid.txt)\\",\\"job\\":\\"$(cat jobid.txt)\\",\\"url\\":\\"$(cat rpturl.txt)\\"}}" > req.json'
+	sh "curl -vX POST http://${sDHN}/index.php?ctx=api -d @req.json"
 }
 
 def pullJARs( src, dst) {
 	def sDHL = 'jenkins'
-	def sDHN = 'jenkinshost'
-	def sDPS = '/home/website/www/pub/repo'
+	def sDHN = 'deployhost'
+	def sDPS = '/var/www/html/pub/eptrepo'
 	sh "rsync -ai --no-g --no-p --no-t ${sDHL}@${sDHN}:${sDPS}/${src}/ ${dst}/"
 }
 
 def launchPerfTest() {
-	pullJARs( "yourappname", '$(pwd)/target')
-	sh 'cp $(pwd)/*.csv $(pwd)/target/jmeter/bin'
-	sh 'cp $(pwd)/*.jks $(pwd)/target/jmeter/bin'
+	def iApp='0'
+	def sDHN='deployhost'
+//	pullJARs( "yourappname", '$(pwd)/target')
+	sh './bin/bjtst sync'
+	sh 'if [ -r *.csv ]; then cp $(pwd)/*.csv $(pwd)/target/jmeter/bin ; fi'
+	sh 'if [ -r *.jks ]; then cp $(pwd)/*.jks $(pwd)/target/jmeter/bin ; fi'
 	sh 'rm -rf $(pwd)/target/jmeter/results ; mkdir -p $(pwd)/target/jmeter/results'
-	sh 'mvn jmeter:jmeter'
-	sh 'java -jar target/jmeter/bin/ApacheJMeter-3.3.jar -g target/jmeter/results/$(date +%Y%m%d)-yourappname.csv -o target/jmeter/results/dashboard'
+	sh "curl -o bjjob.json -vX POST http://${sDHN}/index.php?ctx=api -d '{\"req\":{\"cmd\":\"appjob\",\"id\":\"${iApp}\"}}'"
+	sh "python -c \"import sys, json; print json.load(sys.stdin)['tst']\" < bjjob.json > tstid.txt"
+//	sh 'mvn jmeter:jmeter'
+	sh './bin/bjtst controller'
+	sh 'java -jar target/jmeter/bin/ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y%m%d)-yourappname*.csv -o target/jmeter/results/dashboard'
 	sh 'mv target/jmeter/results/dashboard target/jmeter/results/yourappname-$(date +%Y%m%d%H%M%S)'
-	publishViaSSH( '$(pwd)/target/jmeter/results', "jmeter")
+	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
+}
+
+def launchLoadGen() {
+//	pullJARs( "timbrado", '$(pwd)/target')
+	sh './bin/bjtst sync'
+	sh 'if [ -r *.csv ]; then cp $(pwd)/*.csv $(pwd)/target/jmeter/bin ; fi'
+	sh 'if [ -r *.jks ]; then cp $(pwd)/*.jks $(pwd)/target/jmeter/bin ; fi'
+	sh 'rm -rf $(pwd)/target/jmeter/results ; mkdir -p $(pwd)/target/jmeter/results'
+	sh './bin/bjtst loadgen'
+//	sh 'cd target/jmeter/bin ; java -jar ApacheJMeter-4.0.jar -Dserver_port=1099 -s -j ../../jmeter-server.log'
+//	sh 'mvn jmeter:remote-server'
+}
+
+def launchParallelPerfTest() {
+	parallel (
+		"bluejay002" : { launchLoadGen() },
+		"bluejay001" : { launchLoadGen() },
+		"master" : { launchPerfTest() }
+	)
 }
 
 pipeline {
