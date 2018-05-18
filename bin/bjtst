@@ -49,7 +49,7 @@ function launchController {
 	fi
 	echo "producing report bundle"
 	cd ${JTD}/bin
-	java -jar ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y)*-${ANS}*.csv -o target/jmeter/results/dashboard
+	java -jar ApacheJMeter-4.0.jar -g ${JWD}/target/jmeter/results/$(date +%Y)*-${ANS}*.csv -o ${JWD}/target/jmeter/results/dashboard
 	cd ${JWD}
 	mv ./target/jmeter/results/dashboard ./target/jmeter/results/${ANS}-$(date +%Y%m%d%H%M%S)
 #	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
