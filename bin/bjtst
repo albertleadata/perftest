@@ -24,6 +24,19 @@ function launchController {
 	JTD="${JWD}/target/jmeter"
 #	JTF="${JTD}/testFiles/${ANS}.jmx"
 	JTF="${JWD}/src/test/jmeter/${ANS}.jmx"
+
+	AID='1'
+	DHN='bluejaydev'
+#	pullJARs( "timbrado", '$(pwd)/target')
+	sh './bin/bjtst sync'
+	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
+	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
+	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
+	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
+	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
+#	mvn jmeter:jmeter
+#	./bin/bjtst controller
+
 	if [ -d "${JTD}/bin" ]; then
 		rm -rf ${JTD}/reports/* ; mkdir -p ${JTD}/reports/${ANS}_${TTS}
 		rm -rf ${JTD}/results/*
@@ -31,6 +44,10 @@ function launchController {
 		sleep 4
 		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JTD} -e -j ${JTD}/logs/${ANS}.jmx.log -l ${JTD}/results/${RTS}-${ANS}.csv -o ${JTD}/reports/${ANS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 	fi
+
+	java -jar target/jmeter/bin/ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y)*-timbrado*.csv -o target/jmeter/results/dashboard
+	mv target/jmeter/results/dashboard target/jmeter/results/timbrado-$(date +%Y%m%d%H%M%S)
+#	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
 }
 
 function launchController_nonJenkins {
