@@ -12,7 +12,7 @@ def publishViaSSH( src, dst) {
 	def sDHN = 'bluejaydev'
 	def sDPS = '/var/www/html'
 	def iBld = "${env.BUILD_ID}"
-	sh "rsync -ai --no-o --no-g --no-p --no-t ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
+	sh "rsync -rltDOi ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
 	sh 'echo "#===> RESULTS: please see result/reports at:"'
 	sh "ls ${src} | grep -v .csv | head -1 > rptloc.txt"
 	sh "echo \"${iBld}\" > jobid.txt"
@@ -25,7 +25,7 @@ def pullJARs( src, dst) {
 	def sDHL = 'jenkins'
 	def sDHN = 'bluejaydev'
 	def sDPS = '/var/www/html/pub/eptrepo'
-	sh "rsync -ai --no-g --no-p --no-t ${sDHL}@${sDHN}:${sDPS}/${src}/ ${dst}/"
+	sh "rsync -rltDOi --exclude='*.swp' ${sDHL}@${sDHN}:${sDPS}/${src}/ ${dst}/"
 }
 
 def launchPerfTest() {
@@ -52,8 +52,6 @@ def launchLoadGen() {
 	sh 'if [ -r *.jks ]; then cp $(pwd)/*.jks $(pwd)/target/jmeter/bin ; fi'
 	sh 'rm -rf $(pwd)/target/jmeter/results ; mkdir -p $(pwd)/target/jmeter/results'
 	sh './bin/bjtst loadgen'
-//	sh 'cd target/jmeter/bin ; java -jar ApacheJMeter-4.0.jar -Dserver_port=1099 -s -j ../../jmeter-server.log'
-//	sh 'mvn jmeter:remote-server'
 }
 
 def launchParallelPerfTest() {
@@ -69,13 +67,6 @@ pipeline {
 	agent { label "controller" }
 	stages {
 		stage('test') {
-//			steps {
-			//	Before enabling, review/change ALL occurances of "yourappname"
-			//	to ensure your actual application name is reflected
-			//	sh 'echo "Testing suspended - aborting"'
-			//	launchPerfTest()
-			//	launchParallelPerfTest()
-//			}
 			parallel {
 				stage('Load Gen 2') {
 					agent { label "loadgen002" }
