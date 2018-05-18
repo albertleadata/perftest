@@ -8,7 +8,7 @@ function launchLoadGen {
 	BPN=$(basename ${0})
 	IPA=$(hostname -I)
 	cd ./target/jmeter/bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log
+	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
 }
 
 function launchLoadGen_nonJenkins {
@@ -29,7 +29,7 @@ function launchController {
 		mkdir -p ${JTD}/reports/${ANS}_${TTS}
 		cd ${JTD}/bin
 		sleep 4
-		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JTD} -e -j ${JTD}/logs/${ANS}.jmx.log -l ${JTD}/results/${RTS}-${ANS}.csv -o ${JTD}/reports/${ANS}_${TTS} -t ${JTF}
+		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JTD} -e -j ${JTD}/logs/${ANS}.jmx.log -l ${JTD}/results/${RTS}-${ANS}.csv -o ${JTD}/reports/${ANS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 	fi
 }
 
