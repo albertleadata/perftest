@@ -40,7 +40,7 @@ def launchPerfTest() {
 	sh "python -c \"import sys, json; print json.load(sys.stdin)['tst']\" < bjjob.json > tstid.txt"
 //	sh 'mvn jmeter:jmeter'
 	sh './bin/bjtst controller'
-	sh 'java -jar target/jmeter/bin/ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y%m%d)-timbrado*.csv -o target/jmeter/results/dashboard'
+	sh 'java -jar target/jmeter/bin/ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y)*-timbrado*.csv -o target/jmeter/results/dashboard'
 	sh 'mv target/jmeter/results/dashboard target/jmeter/results/timbrado-$(date +%Y%m%d%H%M%S)'
 	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
 }
