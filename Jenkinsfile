@@ -77,15 +77,15 @@ pipeline {
 //			}
 			parallel {
 				stage('Load Gen 2') {
-					node { label "loadgen002" }
+					agent { label "loadgen002" }
 					steps { launchLoadGen() }
 				}
 				stage('Load Gen 1') {
-					node { label "loadgen001" }
+					agent { label "loadgen001" }
 					steps { launchLoadGen() }
 				}
 				stage('Load Controller') {
-					node { label "controller" }
+					agent { label "controller" }
 					steps { launchPerfTest() }
 				}
 			}
