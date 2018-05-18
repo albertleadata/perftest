@@ -58,9 +58,9 @@ def launchLoadGen() {
 
 def launchParallelPerfTest() {
 	parallel (
-		"bluejay002" : { launchLoadGen() },
-		"bluejay001" : { launchLoadGen() },
-		"master" : { launchPerfTest() }
+		"loadgen002" : { launchLoadGen() },
+		"loadgen001" : { launchLoadGen() },
+		"controller" : { launchPerfTest() }
 	)
 }
 
@@ -73,7 +73,21 @@ pipeline {
 			//	to ensure your actual application name is reflected
 			//	sh 'echo "Testing suspended - aborting"'
 			//	launchPerfTest()
-				launchParallelPerfTest()
+			//	launchParallelPerfTest()
+				parallel {
+					stage('Load Gen 2') {
+						node { label "loadgen002" }
+						steps { launchLoadGen() }
+					}
+					stage('Load Gen 1') {
+						node { label "loadgen001" }
+						steps { launchLoadGen() }
+					}
+					stage('Load Controller') {
+						node { label "controller" }
+						steps { launchPerfTest() }
+					}
+				}
 			}
 		}
 	}
