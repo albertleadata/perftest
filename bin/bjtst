@@ -1,20 +1,24 @@
 #!/bin/bash
 ANS="timbrado"
-ADL="bluejaydev:/var/www/html/pub/eptrepo"
+DHN='bluejaydev'
+ADL="${DHN}:/var/www/html/pub/eptrepo"
 HNL="192.168.0.111,192.168.0.112"
+AID='1'
 
 function launchLoadGen {
 	WDL=$(dirname ${0})
 	BPN=$(basename ${0})
 	IPA=$(hostname -I)
-	cd ./target/jmeter/bin
+	JWD="$(pwd)"
+#	pullJARs( "timbrado", '$(pwd)/target')
+	./bin/bjtst sync
+	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
+	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
+	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
+	echo "starting load generator on ${IPA}"
+	cd ${JWD}/target/jmeter/bin
 	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
-}
-
-function launchLoadGen_nonJenkins {
-	IPA=$(hostname -I)
-	cd ./bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../jmeter-server.log
+	echo "load generator on ${IPA} has completed"
 }
 
 function launchController {
@@ -25,8 +29,6 @@ function launchController {
 #	JTF="${JTD}/testFiles/${ANS}.jmx"
 	JTF="${JWD}/src/test/jmeter/${ANS}.jmx"
 
-	AID='1'
-	DHN='bluejaydev'
 #	pullJARs( "timbrado", '$(pwd)/target')
 	sh './bin/bjtst sync'
 	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
@@ -47,32 +49,15 @@ function launchController {
 	fi
 	echo "producing report bundle"
 	cd ${JTD}/bin
-	java -jar ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y)*-timbrado*.csv -o target/jmeter/results/dashboard
+	java -jar ApacheJMeter-4.0.jar -g target/jmeter/results/$(date +%Y)*-${ANS}*.csv -o target/jmeter/results/dashboard
 	cd ${JWD}
-	mv ./target/jmeter/results/dashboard ./target/jmeter/results/timbrado-$(date +%Y%m%d%H%M%S)
+	mv ./target/jmeter/results/dashboard ./target/jmeter/results/${ANS}-$(date +%Y%m%d%H%M%S)
 #	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
 }
 
-function launchController_nonJenkins {
-	RTS="$(date +'%Y%m%d')"
-	TTS="${RTS}_$(date +'%H%M%S')"
-	JWD="$(pwd)"
-#	JTD="${JWD}/target/jmeter"
-	JTD="${JWD}/target"
-	if [ -d "${JWD}/bin" ]; then
-		rm -rf ${JTD}/results/*
-		cd ${JWD}/bin
-		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JWD} -e -j ${JTD}/logs/${ANS}.jmx.log -l ${JTD}/results/${RTS}-${ANS}.csv -o ${JTD}/reports/${ANS}_${TTS} -t ${JTD}/${ANS}.jmx
-	fi
-}
-
 function syncRepo {
-#	Jenkins-friendly ...
 	rsync -rltDOi --exclude='*.swp' ${ADL}/jmeter/ ./target/jmeter/
 	rsync -rltDOi --exclude='*.swp' ${ADL}/${ANS}/ ./target/
-#	Non-Jenkins ...
-#	rsync -rltDOi --exclude='*.swp' ${ADL}/jmeter/ ./
-#	rsync -rltDOi --exclude='*.swp' ${ADL}/bin/ ${HOME}/bin/
 }
 
 if [ "${1}" == "sync" ]; then
