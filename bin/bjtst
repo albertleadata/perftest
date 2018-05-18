@@ -1,7 +1,8 @@
 #!/bin/bash
 ANS="timbrado"
 DHN='bluejaydev'
-ADL="${DHN}:/var/www/html/pub/eptrepo"
+ADL="/var/www/html/pub"
+WWW="bluejay/jmeter"
 HNL="192.168.0.111,192.168.0.112"
 AID='1'
 
@@ -10,7 +11,6 @@ function launchLoadGen {
 	BPN=$(basename ${0})
 	IPA=$(hostname -I)
 	JWD="$(pwd)"
-#	pullJARs( "timbrado", '$(pwd)/target')
 	./bin/bjtst sync
 	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
 	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
@@ -26,10 +26,7 @@ function launchController {
 	TTS="${RTS}_$(date +'%H%M%S')"
 	JWD="$(pwd)"
 	JTD="${JWD}/target/jmeter"
-#	JTF="${JTD}/testFiles/${ANS}.jmx"
 	JTF="${JWD}/src/test/jmeter/${ANS}.jmx"
-
-#	pullJARs( "timbrado", '$(pwd)/target')
 	sh './bin/bjtst sync'
 	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
 	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
@@ -37,8 +34,6 @@ function launchController {
 	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
 	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
 #	mvn jmeter:jmeter
-#	./bin/bjtst controller
-
 	if [ -d "${JTD}/bin" ]; then
 		rm -rf ${JTD}/reports/* ; mkdir -p ${JTD}/reports/${ANS}_${TTS}
 		rm -rf ${JTD}/results/*
@@ -52,12 +47,23 @@ function launchController {
 	java -jar ApacheJMeter-4.0.jar -g ${JWD}/target/jmeter/results/$(date +%Y)*-${ANS}*.csv -o ${JWD}/target/jmeter/results/dashboard
 	cd ${JWD}
 	mv ./target/jmeter/results/dashboard ./target/jmeter/results/${ANS}-$(date +%Y%m%d%H%M%S)
-#	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
+}
+
+function publishReports {
+	JWD="$(pwd)"
+	JTD="${JWD}/target/jmeter"
+	rsync -rltDOi ${JTD}/results/ ${DHN}:${ADL}/${WWW}/
+	ls ${JTD}/results | grep -v .csv | head -1 > rptloc.txt
+	echo "http://${DHN}/${ADL}/${WWW}/$(cat rptloc.txt)" > rpturl.txt
+	echo "{\"req\":{\"cmd\":\"tstupd\",\"id\":\"$(cat tstid.txt)\",\"job\":\"$(cat jobid.txt)\",\"url\":\"$(cat rpturl.txt)\"}}" > req.json
+	curl -vX POST http://${DHN}/index.php?ctx=api -d @req.json
+	echo "#===> RESULTS: please see result/reports at:"
+	cat rpturl.txt
 }
 
 function syncRepo {
-	rsync -rltDOi --exclude='*.swp' ${ADL}/jmeter/ ./target/jmeter/
-	rsync -rltDOi --exclude='*.swp' ${ADL}/${ANS}/ ./target/
+	rsync -rltDOi --exclude='*.swp' ${DHN}:${ADL}/eptrepo/jmeter/ ./target/jmeter/
+	rsync -rltDOi --exclude='*.swp' ${DHN}:${ADL}/eptrepo/${ANS}/ ./target/
 }
 
 if [ "${1}" == "sync" ]; then
@@ -66,6 +72,8 @@ elif [ "${1}" == "controller" ]; then
 	launchController
 elif [ "${1}" == "loadgen" ]; then
 	launchLoadGen
+elif [ "${1}" == "publish" ]; then
+	publishReports
 else
 	echo "ERR - no valid op provided"
 fi

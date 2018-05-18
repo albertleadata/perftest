@@ -6,32 +6,15 @@ def deployViaSSH( war, id) {
 	sh "scp ${war} ${sTgt}/${id}.war"
 }
 
-
-def publishViaSSH( src, dst) {
-	def sDHL = 'jenkins'
-	def sDHN = 'bluejaydev'
-	def sDPS = '/var/www/html'
+def publishViaSSH() {
 	def iBld = "${env.BUILD_ID}"
-	sh "rsync -rltDOi ${src}/ ${sDHL}@${sDHN}:${sDPS}/${dst}/"
-	sh "ls ${src} | grep -v .csv | head -1 > rptloc.txt"
 	sh "echo \"${iBld}\" > jobid.txt"
-	sh "echo \"http://${sDHN}/${dst}/\$(cat rptloc.txt)\" > rpturl.txt"
-	sh 'echo "{\\"req\\":{\\"cmd\\":\\"tstupd\\",\\"id\\":\\"$(cat tstid.txt)\\",\\"job\\":\\"$(cat jobid.txt)\\",\\"url\\":\\"$(cat rpturl.txt)\\"}}" > req.json'
-	sh "curl -vX POST http://${sDHN}/index.php?ctx=api -d @req.json"
-	sh 'echo "#===> RESULTS: please see result/reports at:"'
-	sh 'cat rpturl.txt'
-}
-
-def pullJARs( src, dst) {
-	def sDHL = 'jenkins'
-	def sDHN = 'bluejaydev'
-	def sDPS = '/var/www/html/pub/eptrepo'
-	sh "rsync -rltDOi --exclude='*.swp' ${sDHL}@${sDHN}:${sDPS}/${src}/ ${dst}/"
+	sh './bin/bjtst publish'
 }
 
 def launchPerfTest() {
 	sh './bin/bjtst controller'
-	publishViaSSH( '$(pwd)/target/jmeter/results', "pub/bluejay/jmeter")
+	publishViaSSH()
 }
 
 def launchLoadGen() {
