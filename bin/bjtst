@@ -8,13 +8,13 @@ function launchLoadGen {
 	BPN=$(basename ${0})
 	IPA=$(hostname -I)
 	cd ./target/jmeter/bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log
+	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log
 }
 
 function launchLoadGen_nonJenkins {
 	IPA=$(hostname -I)
 	cd ./bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../jmeter-server.log
+	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=18099 -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../jmeter-server.log
 }
 
 function launchController {
