@@ -1,8 +1,8 @@
 #!/bin/bash
 ANS="timbrado"
 DHN='bluejaydev'
-ADL="/var/www/html/pub"
-WWW="bluejay/jmeter"
+ADL="/var/www/html"
+WWW="pub/bluejay/jmeter"
 HNL="192.168.0.111,192.168.0.112"
 AID='1'
 
@@ -27,7 +27,7 @@ function launchController {
 	JWD="$(pwd)"
 	JTD="${JWD}/target/jmeter"
 	JTF="${JWD}/src/test/jmeter/${ANS}.jmx"
-	sh './bin/bjtst sync'
+	./bin/bjtst sync
 	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
 	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
 	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
@@ -54,7 +54,7 @@ function publishReports {
 	JTD="${JWD}/target/jmeter"
 	rsync -rltDOi ${JTD}/results/ ${DHN}:${ADL}/${WWW}/
 	ls ${JTD}/results | grep -v .csv | head -1 > rptloc.txt
-	echo "http://${DHN}/${ADL}/${WWW}/$(cat rptloc.txt)" > rpturl.txt
+	echo "http://${DHN}/${WWW}/$(cat rptloc.txt)" > rpturl.txt
 	echo "{\"req\":{\"cmd\":\"tstupd\",\"id\":\"$(cat tstid.txt)\",\"job\":\"$(cat jobid.txt)\",\"url\":\"$(cat rpturl.txt)\"}}" > req.json
 	curl -vX POST http://${DHN}/index.php?ctx=api -d @req.json
 	echo "#===> RESULTS: please see result/reports at:"
@@ -62,8 +62,8 @@ function publishReports {
 }
 
 function syncRepo {
-	rsync -rltDOi --exclude='*.swp' ${DHN}:${ADL}/eptrepo/jmeter/ ./target/jmeter/
-	rsync -rltDOi --exclude='*.swp' ${DHN}:${ADL}/eptrepo/${ANS}/ ./target/
+	rsync -rltDOi --exclude='*.swp' ${DHN}:${ADL}/pub/eptrepo/jmeter/ ./target/jmeter/
+	rsync -rltDOi --exclude='*.swp' ${DHN}:${ADL}/pub/eptrepo/${ANS}/ ./target/
 }
 
 if [ "${1}" == "sync" ]; then
