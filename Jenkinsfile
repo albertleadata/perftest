@@ -65,7 +65,8 @@ def launchParallelPerfTest() {
 }
 
 pipeline {
-	agent any
+//	agent any
+	agent { label "controller" }
 	stages {
 		stage('test') {
 //			steps {
