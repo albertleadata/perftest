@@ -26,6 +26,7 @@ function launchController {
 	JTF="${JWD}/src/test/jmeter/${ANS}.jmx"
 	if [ -d "${JTD}/bin" ]; then
 		rm -rf ${JTD}/results/*
+		mkdir ${JTD}/results/${ANS}_${TTS}
 		cd ${JTD}/bin
 		sleep 4
 		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JTD} -e -j ${JTD}/logs/${ANS}.jmx.log -l ${JTD}/results/${RTS}-${ANS}.csv -o ${JTD}/reports/${ANS}_${TTS} -t ${JTF}
