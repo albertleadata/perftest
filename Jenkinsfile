@@ -44,7 +44,10 @@ pipeline {
 				}
 				stage('Load Controller') {
 					agent { label "controller" }
-					steps { launchPerfTest() }
+					steps {
+						launchPerfTest()
+						sh 'exit 0'
+					}
 				}
 			}
 		//	steps { sh 'echo "Testing suspended by configuration"' }
