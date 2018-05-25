@@ -19,6 +19,7 @@ def launchPerfTest() {
 
 def launchLoadGen() {
 	sh './bin/bjtst loadgen'
+	return
 }
 
 def launchParallelPerfTest() {
