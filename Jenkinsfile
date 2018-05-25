@@ -46,7 +46,7 @@ pipeline {
 					agent { label "controller" }
 					steps {
 						launchPerfTest()
-						sh 'exit 0'
+						return
 					}
 				}
 			}
