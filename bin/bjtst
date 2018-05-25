@@ -1,12 +1,12 @@
 #!/bin/bash
-ANS="yourappname"
-JNS="jenkinsapp"
-DHN='deployhost'
+ANS="mattbot"
+JNS="timbrado"
+DHN='bluejaydev'
 ADL="/var/www/html"
 WWW="pub/bluejay/jmeter"
-HNL="xxx.xxx.xxx.xxx,yyy.yyy.yyy.yyy"
-HPN="1XXXX"
-AID='0'
+HNL="192.168.0.111,192.168.0.112"
+HPN="10002"
+AID='2'
 
 function launchLoadGen {
 	WDL=$(dirname ${0})

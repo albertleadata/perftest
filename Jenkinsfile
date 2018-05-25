@@ -33,21 +33,21 @@ pipeline {
 	agent { label "controller" }
 	stages {
 		stage('test') {
-//			parallel {
-//				stage('Load Gen 2') {
-//					agent { label "loadgen002" }
-//					steps { launchLoadGen() }
-//				}
-//				stage('Load Gen 1') {
-//					agent { label "loadgen001" }
-//					steps { launchLoadGen() }
-//				}
-//				stage('Load Controller') {
-//					agent { label "controller" }
-//					steps { launchPerfTest() }
-//				}
-//			}
-			steps { sh 'echo "Testing suspended by configuration"' }
+			parallel {
+				stage('Load Gen 2') {
+					agent { label "loadgen002" }
+					steps { launchLoadGen() }
+				}
+				stage('Load Gen 1') {
+					agent { label "loadgen001" }
+					steps { launchLoadGen() }
+				}
+				stage('Load Controller') {
+					agent { label "controller" }
+					steps { launchPerfTest() }
+				}
+			}
+		//	steps { sh 'echo "Testing suspended by configuration"' }
 		}
 	}
 }
