@@ -5,7 +5,7 @@ DHN='deployhost'
 ADL="/var/www/html"
 WWW="pub/bluejay/jmeter"
 HNL="xxx.xxx.xxx.xxx,yyy.yyy.yyy.yyy"
-HPN="1XXXX"
+HPN="1XXX8"
 AID='0'
 
 function launchLoadGen {
