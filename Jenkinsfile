@@ -46,8 +46,8 @@ pipeline {
 					agent { label "controller" }
 					steps {
 						launchPerfTest()
-						return
 					}
+					return
 				}
 			}
 		//	steps { sh 'echo "Testing suspended by configuration"' }
