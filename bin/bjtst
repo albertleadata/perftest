@@ -5,7 +5,7 @@ DHN='bluejaydev'
 ADL="/var/www/html"
 WWW="pub/bluejay/jmeter"
 HNL="192.168.0.111,192.168.0.112"
-HPN="10002"
+HPN="10028"
 AID='2'
 
 function launchLoadGen {
