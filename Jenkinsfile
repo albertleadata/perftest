@@ -42,12 +42,11 @@ pipeline {
 					agent { label "loadgen001" }
 					steps { launchLoadGen() }
 				}
-//				stage('Load Controller') {
-//					agent { label "controller" }
-//					steps { launchPerfTest() }
-//				}
+				stage('Load Controller') {
+					agent { label "controller" }
+					steps { launchPerfTest() }
+				}
 			}
-			steps { launchPerfTest() }
 		//	steps { sh 'echo "Testing suspended by configuration"' }
 		}
 	}
