@@ -14,6 +14,7 @@ def publishViaSSH() {
 def launchPerfTest() {
 	sh './bin/bjtst controller'
 	publishViaSSH()
+	return
 }
 
 def launchLoadGen() {
@@ -44,10 +45,7 @@ pipeline {
 //				}
 //				stage('Load Controller') {
 //					agent { label "controller" }
-//					steps {
-//						launchPerfTest()
-//					}
-//					return
+//					steps { launchPerfTest() }
 //				}
 //			}
 			steps { sh 'echo "Testing suspended by configuration"' }
