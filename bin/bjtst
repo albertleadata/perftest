@@ -10,7 +10,7 @@ AID='0'
 
 function launchRegistry {
 	JRP=$(ps -eo pid,comm | grep rmiregistry | cut -d' ' -f1)
-	if [ "${JRP}" != "" ]; then
+	if [ "${JRP}" == "" ]; then
 		echo "no RMI registry detected, launching ..."
 		nohup rmiregistry 1>/dev/null 2>&1 &
 	else
