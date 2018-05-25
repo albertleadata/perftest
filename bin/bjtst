@@ -45,7 +45,7 @@ function launchController {
 		cd ${JTD}/bin
 		sleep 4
 		echo "launching load generation controller"
-		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JTD} -e -j ${JTD}/logs/${JNS}.jmx.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
+		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${JNS}.jmx.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 		echo "load generation controller has finished"
 	fi
 	echo "producing report bundle"
