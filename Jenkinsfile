@@ -30,7 +30,7 @@ def launchParallelPerfTest() {
 
 pipeline {
 //	agent any
-	agent { label "controller" }
+	agent { label "Jenkins" }
 	stages {
 		stage('test') {
 			parallel {
