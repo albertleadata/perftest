@@ -20,7 +20,7 @@ function launchLoadGen {
 	rm -rf ${JWD}/target/jmeter/reports ; mkdir -p ${JWD}/target/jmeter/reports
 	echo "starting load generator on ${IPA}"
 	cd ${JWD}/target/jmeter/bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=${HPN} -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
+	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.localport=${HPN} -Jmode=Asynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -s -j ../../jmeter-server.log 1>/dev/null 2>&1
 	echo "load generator on ${IPA} has completed"
 }
 
@@ -34,7 +34,9 @@ function launchController {
 	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
 	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
 	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
-	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
+	CRS="{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
+	echo "Invoking REST API: ${CRS}"
+	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
 	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
 #	mvn jmeter:jmeter
 	if [ -d "${JTD}/bin" ]; then
@@ -44,26 +46,32 @@ function launchController {
 		sleep 4
 		echo "launching load generation controller"
 		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -X -d ${JTD} -e -j ${JTD}/logs/${JNS}.jmx.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
+		echo "load generation controller has finished"
 	fi
 	echo "producing report bundle"
 	cd ${JTD}/bin
 	java -jar ApacheJMeter-4.0.jar -g ${JWD}/target/jmeter/results/$(date +%Y)*-${JNS}*.csv -o ${JWD}/target/jmeter/results/dashboard
 	cd ${JWD}
+	echo "report bundle processing complete"
 	chmod -R g+r ./target/jmeter/results
 	find ./target/jmeter/results -type d | sed "s/^.*/chmod g+rx \"&\"/" | bash
 	mv ./target/jmeter/results/dashboard ./target/jmeter/results/${ANS}-$(date +%Y%m%d%H%M%S)
+	echo "load controller has completed"
 }
 
 function publishReports {
 	JWD="$(pwd)"
 	JTD="${JWD}/target/jmeter"
+	echo "publishing report bundle"
 	rsync -rltDOi ${JTD}/results/ bluejay@${DHN}:${ADL}/${WWW}/
 	ls ${JTD}/results | grep -v .csv | head -1 > rptloc.txt
 	echo "http://${DHN}/${WWW}/$(cat rptloc.txt)" > rpturl.txt
 	echo "{\"req\":{\"cmd\":\"tstupd\",\"id\":\"$(cat tstid.txt)\",\"job\":\"$(cat jobid.txt)\",\"url\":\"$(cat rpturl.txt)\"}}" > req.json
+	echo "Invoking REST API: $(cat req.json)"
 	curl -vX POST http://${DHN}/index.php?ctx=api -d @req.json
 	echo "#===> RESULTS: please see result/reports at:"
 	cat rpturl.txt
+	echo "report bundle publish complete"
 }
 
 function syncRepo {
