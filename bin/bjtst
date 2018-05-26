@@ -5,14 +5,15 @@ DHN='deployhost'
 ADL="/var/www/html"
 WWW="pub/bluejay/jmeter"
 HNL="xxx.xxx.xxx.xxx,yyy.yyy.yyy.yyy"
-HPN="1XXX8"
+RPN="3XXX8"
+HPN="4XXX8"
 AID='0'
 
 function launchRegistry {
 	JRP=$(ps -eo pid,cmd|grep java|grep BluejayRMI|sed "s/^  *//"|cut -d' ' -f1)
 	if [ "${JRP}" == "" ]; then
 		echo "no RMI registry detected, launching ..."
-		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup java com.optum.BluejayRMI 1>/dev/null 2>&1 &
+		CLASSPATH='./*:../lib/*:../lib/ext/*' java com.optum.BluejayRMI ${RPN}
 	else
 		echo "RMI registry detected, OK to proceed"
 	fi
