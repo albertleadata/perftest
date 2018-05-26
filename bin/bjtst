@@ -9,7 +9,7 @@ HPN="10018"
 AID='1'
 
 function launchRegistry {
-	JRP=$(ps -eo pid,comm | grep java | grep BluejayRMI | cut -d' ' -f1)
+	JRP=$(ps -eo pid,cmd | grep java | grep BluejayRMI | cut -d' ' -f1)
 	if [ "${JRP}" == "" ]; then
 		echo "no RMI registry detected, launching ..."
 		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup java com.optum.BluejayRMI 1>/dev/null 2>&1 &
