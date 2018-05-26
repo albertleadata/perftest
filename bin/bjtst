@@ -13,7 +13,7 @@ function launchRegistry {
 	JRP=$(ps -eo pid,cmd|grep java|grep BluejayRMI| grep ${RPN}|sed "s/^  *//"|cut -d' ' -f1)
 	if [ "${JRP}" == "" ]; then
 		echo "no RMI registry detected, launching ..."
-		CLASSPATH='./*:../lib/*:../lib/ext/*' java com.optum.BluejayRMI ${RPN}
+		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup java com.optum.BluejayRMI ${RPN} 1>/dev/null 2>&1 &
 	else
 		echo "RMI registry detected, OK to proceed"
 	fi
