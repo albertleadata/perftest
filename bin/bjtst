@@ -9,18 +9,6 @@ HPN="40028"
 HNL="192.168.0.111:${RPN},192.168.0.112:${RPN}"
 AID='2'
 
-function launchRegistry {
-#	JRP=$(ps -eo pid,cmd|grep java|grep BluejayRMI| grep ${RPN}|sed "s/^  *//"|cut -d' ' -f1)
-	JRP=$(ps -eo pid,cmd|grep -i rmi| grep ${RPN}|sed "s/^  *//"|cut -d' ' -f1)
-	if [ "${JRP}" == "" ]; then
-		echo "no RMI registry detected, launching ..."
-	#	CLASSPATH='./*:../lib/*:../lib/ext/*' nohup rmiregistry ${RPN} 1>/dev/null 2>&1 &
-		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup java com.optum.BluejayRMI ${RPN} 1>/dev/null 2>&1 &
-	else
-		echo "RMI registry detected, OK to proceed"
-	fi
-}
-
 function launchLoadGen {
 	WDL=$(dirname ${0})
 	BPN=$(basename ${0})
@@ -32,10 +20,7 @@ function launchLoadGen {
 	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
 	rm -rf ${JWD}/target/jmeter/reports ; mkdir -p ${JWD}/target/jmeter/reports
 	cd ${JWD}/target/jmeter/bin
-#	echo "detecting RMI registry ... on ${IPA}"
-#	launchRegistry "${JWD}/target/jmeter"
 	echo "starting load generator on ${IPA}"
-#	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver.rmi.create=false -Jserver_port=${RPN} -Jserver.rmi.localport=${HPN} -Jmode=StrippedAsynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
 	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver_port=${RPN} -Jserver.rmi.localport=${HPN} -Jmode=StrippedAsynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
 	echo "load generator on ${IPA} has completed"
 }
