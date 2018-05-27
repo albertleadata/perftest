@@ -11,11 +11,11 @@ AID='2'
 
 function launchRegistry {
 #	JRP=$(ps -eo pid,cmd|grep java|grep BluejayRMI| grep ${RPN}|sed "s/^  *//"|cut -d' ' -f1)
-	JRP=$(ps -eo pid,cmd|grep rmi| grep ${RPN}|sed "s/^  *//"|cut -d' ' -f1)
+	JRP=$(ps -eo pid,cmd|grep -i rmi| grep ${RPN}|sed "s/^  *//"|cut -d' ' -f1)
 	if [ "${JRP}" == "" ]; then
 		echo "no RMI registry detected, launching ..."
-#		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup java com.optum.BluejayRMI ${RPN} 1>/dev/null 2>&1 &
-		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup rmiregistry ${RPN} 1>/dev/null 2>&1 &
+	#	CLASSPATH='./*:../lib/*:../lib/ext/*' nohup rmiregistry ${RPN} 1>/dev/null 2>&1 &
+		CLASSPATH='./*:../lib/*:../lib/ext/*' nohup java com.optum.BluejayRMI ${RPN} 1>/dev/null 2>&1 &
 	else
 		echo "RMI registry detected, OK to proceed"
 	fi
