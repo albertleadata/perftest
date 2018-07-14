@@ -480,7 +480,7 @@
             </elementProp>
             <elementProp name="InfluxName" elementType="Argument">
               <stringProp name="Argument.name">InfluxName</stringProp>
-              <stringProp name="Argument.value">jmeter</stringProp>
+              <stringProp name="Argument.value">bluejay</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="InfluxLogin" elementType="Argument">
