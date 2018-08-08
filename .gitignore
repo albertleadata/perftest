@@ -1,7 +1,16 @@
 # Ensure this file isn't ignored
 !.gitignore
+# Ignore run-time artifacts
+.settings*
+.project*
 # Ignore files with these extensions
 *.swp
 *.log
 # Ignore anything under these directories
-target*
+xfr*
+log*
+target/*
+# Ensure consideration of subdirectories
+!*/
+# Specific exceptions
+target/jmeter/lib/ext/*.jar
