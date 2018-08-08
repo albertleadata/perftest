@@ -6,6 +6,9 @@ ADL="/var/www/html"
 WWW="pub/bluejay/jmeter"
 RPN="30018"
 HPN="40018"
+# loadgen001 & loadgen002
+#HNL="10.87.57.86:${RPN},10.87.53.86:${RPN}"
+# loadgen004 & loadgen005
 HNL="192.168.0.111:${RPN},192.168.0.112:${RPN}"
 AID='1'
 
@@ -15,8 +18,8 @@ function launchLoadGen {
 	IPA=$(hostname -I)
 	JWD="$(pwd)"
 	./bin/bjtst sync
-	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
-	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
+	cp ${JWD}/*.csv ${JWD}/target/jmeter/bin
+	cp ${JWD}/*.jks ${JWD}/target/jmeter/bin
 	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
 	rm -rf ${JWD}/target/jmeter/reports ; mkdir -p ${JWD}/target/jmeter/reports
 	echo "starting load generator on ${IPA}"
@@ -32,8 +35,8 @@ function launchController {
 	JTD="${JWD}/target/jmeter"
 	JTF="${JWD}/src/test/jmeter/${JNS}.jmx"
 	./bin/bjtst sync
-	if [ -r *.csv ]; then cp ${JWD}/*.csv ${JWD}/target/jmeter/bin ; fi
-	if [ -r *.jks ]; then cp ${JWD}/*.jks ${JWD}/target/jmeter/bin ; fi
+	cp ${JWD}/*.csv ${JWD}/target/jmeter/bin
+	cp ${JWD}/*.jks ${JWD}/target/jmeter/bin
 	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
 	CRS="{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
 	echo "Invoking REST API: ${CRS}"
@@ -49,11 +52,14 @@ function launchController {
 		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${JNS}.jmx.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 		echo "load generation controller has finished"
 		echo "producing report bundle"
-		java -jar ApacheJMeter-4.0.jar -g ${JWD}/target/jmeter/results/$(date +%Y)*-${JNS}*.csv -o ${JWD}/target/jmeter/results/dashboard
+		DTS=$(date +%Y)
+		java -jar ApacheJMeter-4.0.jar -g ${JWD}/target/jmeter/results/${DTS}*-${JNS}*.csv -o ${JWD}/target/jmeter/results/dashboard
 		cd ${JWD}
 		chmod -R g+r ./target/jmeter/results
 		find ./target/jmeter/results -type d | sed "s/^.*/chmod g+rx \"&\"/" | bash
-		mv ./target/jmeter/results/dashboard ./target/jmeter/results/${ANS}-$(date +%Y%m%d%H%M%S)
+		ATS=$(date +%Y%m%d%H%M%S)
+		mv ./target/jmeter/results/dashboard ./target/jmeter/results/${ANS}-${ATS}
+		cp ./target/jmeter/results/${DTS}*-${JNS}*.csv ./target/jmeter/results/${ANS}-${ATS}/results.csv
 		echo "report bundle processing complete"
 	else
 		echo "load generation controller aborted - JMeter footprint not detected"
