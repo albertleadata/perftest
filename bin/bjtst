@@ -33,7 +33,6 @@ function launchController {
 	TTS="${RTS}_$(date +'%H%M%S')"
 	JWD="$(pwd)"
 	JTD="${JWD}/target/jmeter"
-	JTF="${JWD}/src/test/jmeter/${JNS}.jmx"
 	./bin/bjtst sync
 	cp ${JWD}/*.csv ${JWD}/target/jmeter/bin
 	cp ${JWD}/*.jks ${JWD}/target/jmeter/bin
@@ -42,6 +41,10 @@ function launchController {
 	echo "Invoking REST API: ${CRS}"
 	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
 	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
+	python -c "import sys, json; print json.load(sys.stdin)['doc']" < bjjob.json > plan.txt
+	DOC=$(cat plan.txt)
+#	JTF="${JWD}/src/test/jmeter/${JNS}.jmx"
+	JTF="${JWD}/src/test/jmeter/${DOC}"
 #	mvn jmeter:jmeter
 	if [ -d "${JTD}/bin" ]; then
 		rm -rf ${JTD}/reports/* ; mkdir -p ${JTD}/reports/${JNS}_${TTS}
@@ -49,7 +52,7 @@ function launchController {
 		cd ${JTD}/bin
 		sleep 6
 		echo "launching load generation controller"
-		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${JNS}.jmx.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
+		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${DOC}.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 		echo "load generation controller has finished"
 		echo "producing report bundle"
 		DTS=$(date +%Y)
