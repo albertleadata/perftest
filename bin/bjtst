@@ -24,7 +24,7 @@ function launchLoadGen {
 	rm -rf ${JWD}/target/jmeter/reports ; mkdir -p ${JWD}/target/jmeter/reports
 	echo "starting load generator on ${IPA}"
 	cd ${JWD}/target/jmeter/bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter-4.0.jar -Jserver_port=${RPN} -Jserver.rmi.localport=${HPN} -Jmode=StrippedAsynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
+	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter.jar -Jserver_port=${RPN} -Jserver.rmi.localport=${HPN} -Jmode=StrippedAsynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
 	echo "load generator on ${IPA} has completed"
 }
 
@@ -45,7 +45,6 @@ function launchController {
 	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
 	python -c "import sys, json; print json.load(sys.stdin)['doc']" < bjjob.json > plan.txt
 	DOC=$(cat plan.txt)
-#	JTF="${JWD}/src/test/jmeter/${JNS}.jmx"
 	JTF="${JWD}/src/test/jmeter/${DOC}"
 #	mvn jmeter:jmeter
 	if [ -d "${JTD}/bin" ]; then
@@ -54,11 +53,11 @@ function launchController {
 		cd ${JTD}/bin
 		sleep 6
 		echo "launching load generation controller"
-		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter-4.0.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${DOC}.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
+		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${DOC}.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 		echo "load generation controller has finished"
 		echo "producing report bundle"
 		DTS=$(date +%Y)
-		java -jar ApacheJMeter-4.0.jar -g ${JWD}/target/jmeter/results/${DTS}*-${JNS}*.csv -o ${JWD}/target/jmeter/results/dashboard
+		java -jar ApacheJMeter.jar -g ${JWD}/target/jmeter/results/${DTS}*-${JNS}*.csv -o ${JWD}/target/jmeter/results/dashboard
 		cd ${JWD}
 		chmod -R g+r ./target/jmeter/results
 		find ./target/jmeter/results -type d | sed "s/^.*/chmod g+rx \"&\"/" | bash
