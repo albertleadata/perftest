@@ -40,6 +40,8 @@ function launchController {
 	CRS="{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
 	echo "Invoking REST API: ${CRS}"
 	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
+	echo "Response JSON:"
+	cat bjjob.json
 	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
 	python -c "import sys, json; print json.load(sys.stdin)['doc']" < bjjob.json > plan.txt
 	DOC=$(cat plan.txt)
