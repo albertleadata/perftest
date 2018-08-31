@@ -11,9 +11,13 @@ def publishViaSSH() {
 	sh './bin/bjtst publish'
 }
 
+def launchStandalone() {
+	sh './bin/bjtst standalone'
+	return
+}
+
 def launchPerfTest() {
 	sh './bin/bjtst controller'
-	publishViaSSH()
 	return
 }
 
@@ -26,15 +30,16 @@ def launchParallelPerfTest() {
 	parallel (
 		"loadgen002" : { launchLoadGen() },
 		"loadgen001" : { launchLoadGen() },
-		"controller" : { launchPerfTest() }
+		"controller003" : { launchPerfTest() }
 	)
 }
 
 pipeline {
 //	agent any
-	agent { label "Jenkins" }
+	agent { label "bluejay" }
 	stages {
 		stage('test') {
+		//	steps { launchStandalone() } post { always { publishViaSSH() } }
 			parallel {
 				stage('Load Gen 2') {
 					agent { label "loadgen002" }
@@ -44,9 +49,10 @@ pipeline {
 					agent { label "loadgen001" }
 					steps { launchLoadGen() }
 				}
-				stage('Load Controller') {
-					agent { label "controller" }
+				stage('Load Controller 3') {
+					agent { label "controller003" }
 					steps { launchPerfTest() }
+					post { always { publishViaSSH() } }
 				}
 			}
 		//	steps { sh 'echo "Testing suspended by configuration"' }
