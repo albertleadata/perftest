@@ -13,4 +13,4 @@ target/*
 # Ensure consideration of subdirectories
 !*/
 # Specific exceptions
-target/jmeter/lib/ext/*.jar
+!target/jmeter/lib/ext/*.jar

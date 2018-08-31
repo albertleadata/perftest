@@ -1,15 +1,17 @@
 #!/bin/bash
-ANS="yourappname"
-JNS="jenkinsapp"
-DHN='deployhost'
+ANS="replace with Application name for e.g. yourappname"
+JNS="replace with Jenkins app name for e.g. timbrado"
+DHN='replace with Automation engine host e.g. your Jenkins server'
 ADL="/var/www/html"
 WWW="pub/bluejay/jmeter"
-RPN="3XXX8"
-HPN="4XXX8"
-HNL="xxx.xxx.xxx.xxx:${RPN},yyy.yyy.yyy.yyy:${RPN}"
-AID='0'
+RPN="3xxx3"
+HPN="4xxx3"
+HNL="x.x.x.x:${RPN},y.y.y.y:${RPN}"
+AID='x'
 
 function launchLoadGen {
+#	JTM=Asynch
+	JTM=StrippedAsynch
 	WDL=$(dirname ${0})
 	BPN=$(basename ${0})
 	IPA=$(hostname -I)
@@ -21,7 +23,7 @@ function launchLoadGen {
 	rm -rf ${JWD}/target/jmeter/reports ; mkdir -p ${JWD}/target/jmeter/reports
 	echo "starting load generator on ${IPA}"
 	cd ${JWD}/target/jmeter/bin
-	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter.jar -Jserver_port=${RPN} -Jserver.rmi.localport=${HPN} -Jmode=StrippedAsynch -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
+	java -server -XX:+HeapDumpOnOutOfMemoryError -Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m  -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:G1ReservePercent=20 -Djava.security.egd=file:/dev/urandom -Duser.language=en -Duser.region=EN -Dsun.rmi.loader.logLevel=verbose -Djava.rmi.server.hostname=${IPA} -jar ApacheJMeter.jar -Jserver_port=${RPN} -Jserver.rmi.localport=${HPN} -Jmode=${JTM} -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -s -j ../../jmeter-server.log 1>/dev/null 2>&1
 	echo "load generator on ${IPA} has completed"
 }
 
@@ -48,10 +50,52 @@ function launchController {
 		rm -rf ${JTD}/reports/* ; mkdir -p ${JTD}/reports/${JNS}_${TTS}
 		rm -rf ${JTD}/results/*
 		cd ${JTD}/bin
-		sleep 6
+		sleep 4
 		echo "launching load generation controller"
 		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter.jar -n -r --remoteexit -Jremote_hosts="${HNL}" -Jasynch.batch.queue.size=8000 -Jtime_threshold=1000 -d ${JTD} -e -j ${JTD}/logs/${DOC}.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
 		echo "load generation controller has finished"
+	else
+		echo "load generation controller aborted - JMeter footprint not detected"
+	fi
+	echo "test session controller has completed"
+}
+
+function launchStandalone {
+	RTS="$(date +'%Y%m%d')"
+	TTS="${RTS}_$(date +'%H%M%S')"
+	JWD="$(pwd)"
+	JTD="${JWD}/target/jmeter"
+	JTF="${JWD}/src/test/jmeter/${JNS}.jmx"
+	./bin/bjtst sync
+	cp ${JWD}/*.csv ${JWD}/target/jmeter/bin
+	cp ${JWD}/*.jks ${JWD}/target/jmeter/bin
+	rm -rf ${JWD}/target/jmeter/results ; mkdir -p ${JWD}/target/jmeter/results
+	CRS="{\"req\":{\"cmd\":\"appjob\",\"id\":\"${AID}\"}}"
+	echo "Invoking REST API: ${CRS}"
+	curl -o bjjob.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
+	python -c "import sys, json; print json.load(sys.stdin)['tst']" < bjjob.json > tstid.txt
+#	mvn jmeter:jmeter
+	if [ -d "${JTD}/bin" ]; then
+		rm -rf ${JTD}/reports/* ; mkdir -p ${JTD}/reports/${JNS}_${TTS}
+		rm -rf ${JTD}/results/*
+		cd ${JTD}/bin
+		sleep 4
+		echo "launching load generation controller"
+		java -Xms512M -Xmx512M -Dsun.rmi.loader.logLevel=verbose -jar ApacheJMeter.jar -n -d ${JTD} -e -j ${JTD}/logs/${JNS}.jmx.log -l ${JTD}/results/${RTS}-${JNS}.csv -o ${JTD}/reports/${JNS}_${TTS} -t ${JTF} 1>/dev/null 2>&1
+		echo "load generation controller has finished"
+	else
+		echo "load generation controller aborted - JMeter footprint not detected"
+	fi
+	echo "test session controller has completed"
+}
+
+function generateReports {
+	RTS="$(date +'%Y%m%d')"
+	TTS="${RTS}_$(date +'%H%M%S')"
+	JWD="$(pwd)"
+	JTD="${JWD}/target/jmeter"
+	if [ -d "${JTD}/bin" ]; then
+		cd ${JTD}/bin
 		echo "producing report bundle"
 		DTS=$(date +%Y)
 		java -jar ApacheJMeter.jar -g ${JWD}/target/jmeter/results/${DTS}*-${JNS}*.csv -o ${JWD}/target/jmeter/results/dashboard
@@ -63,10 +107,9 @@ function launchController {
 		cp ./target/jmeter/results/${DTS}*-${JNS}*.csv ./target/jmeter/results/${ANS}-${ATS}/results.csv
 		echo "report bundle processing complete"
 	else
-		echo "load generation controller aborted - JMeter footprint not detected"
 		echo "report bundle generation aborted - load generation controller failure"
 	fi
-	echo "test session controller has completed"
+	echo "report generation has completed"
 }
 
 function publishReports {
@@ -93,11 +136,14 @@ function syncRepo {
 
 if [ "${1}" == "sync" ]; then
 	syncRepo
+elif [ "${1}" == "standalone" ]; then
+	launchStandalone
 elif [ "${1}" == "controller" ]; then
 	launchController
 elif [ "${1}" == "loadgen" ]; then
 	launchLoadGen
 elif [ "${1}" == "publish" ]; then
+	generateReports
 	publishReports
 else
 	echo "ERR - no valid op provided"
