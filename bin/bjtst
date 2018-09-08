@@ -18,6 +18,15 @@ function preFetch {
 	python -c "import sys, json; print json.load(sys.stdin)['msg']" < rsp.json > apitkn.txt
 }
 
+function preFetch {
+	CRS="{\"req\":{\"cmd\":\"auth\",\"bluejay_uid\":\"msamud1\",\"bluejay_pwd\":\"dor0tea\"}}"
+	echo "Invoking REST API: ${CRS}"
+	curl -o rsp.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
+	echo "Response JSON:"
+	cat rsp.json
+	python -c "import sys, json; print json.load(sys.stdin)['msg']" < rsp.json > apitkn.txt
+}
+
 function launchLoadGen {
 #	JTM=Asynch
 	JTM=StrippedAsynch
