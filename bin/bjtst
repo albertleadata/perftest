@@ -10,12 +10,13 @@ HNL="x.x.x.x:${RPN},y.y.y.y:${RPN}"
 AID='x'
 
 function preFetch {
-	CRS="{\"req\":{\"cmd\":\"auth\",\"bluejay_uid\":\"msamud1\",\"bluejay_pwd\":\"dor0tea\"}}"
-	echo "Invoking REST API: ${CRS}"
-	curl -o rsp.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
-	echo "Response JSON:"
-	cat rsp.json
-	python -c "import sys, json; print json.load(sys.stdin)['msg']" < rsp.json > apitkn.txt
+	CRS="{\"req\":{\"cmd\":\"auth\",\"bluejay_uid\":\"yourlogin\",\"bluejay_pwd\":\"yourpassword\"}}"
+#	echo "Invoking REST API: ${CRS}"
+#	curl -o rsp.json -vX POST http://${DHN}/index.php?ctx=api -d "${CRS}"
+#	echo "Response JSON:"
+#	cat rsp.json
+#	python -c "import sys, json; print json.load(sys.stdin)['msg']" < rsp.json > apitkn.txt
+	echo "" > apitkn.txt
 }
 
 function launchLoadGen {
