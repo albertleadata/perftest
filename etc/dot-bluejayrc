@@ -2,4 +2,4 @@ bluejay.jmeter.aid = 1
 bluejay.jmeter.jns = timbrado
 bluejay.jmeter.dhn = bluejaydev
 bluejay.jmeter.adl = /var/www/lib
-bluejay.jmeter.www = pub/bluejay/jmeter
+bluejay.jmeter.www = http://localhost:18080/pub
