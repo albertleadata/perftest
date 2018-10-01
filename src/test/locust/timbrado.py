@@ -45,7 +45,7 @@ def on_quitting():
 	bAlive = False
 
 loadConfig
-client = InfluxDBClient( 'bluejaydev', 8086, 'jmeter', 'h0ckeypuck', 'bluejay')
+client = InfluxDBClient( sHost, 8086, 'jmeter', 'h0ckeypuck', 'bluejay')
 # Trying to create an existing database will fail ...
 #client.create_database( 'bluejay')
 #events.request_success += on_request_success
@@ -56,8 +56,6 @@ class TestPlan( TaskSet):
 	def default_task( self):
 		global bAlive
 		global sApp
-		global sWWW
-		global sHost
 		while bAlive:
 			pRsp = self.client.get( "/timbrado/portal?op=epsilon")
 			pReq = pRsp.request
@@ -75,7 +73,6 @@ class TestPlan( TaskSet):
 					"rsp": int(pRsp.elapsed),
 					"sent": len(sReq),
 					"tst": "PoC",
-				#	"url": sHost+name,
 					"url": pRsp.url,
 					"txt": request_type
 				}
@@ -84,8 +81,8 @@ class TestPlan( TaskSet):
 			time.sleep(0.768)
 
 class vUser( HttpLocust):
-	global sHost
-	host = sHost
+	global sWWW
+	host = sWWW
 	task_set = TestPlan
 	min_wait = 500
 	max_wait = 5000
