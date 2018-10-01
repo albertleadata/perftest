@@ -127,5 +127,5 @@ class BluejaySimulation extends Simulation {
 			.post("/index.php?ctx=api")
 			.body(RawFileBody("BluejaySimulation_0022_request.txt")))
 
-	setUp(scn.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn.inject(atOnceUsers(2),rampUsers(4) during (6 seconds),constantUsersPerSec(8) during (2 minutes))).protocols(httpProtocol)
 }

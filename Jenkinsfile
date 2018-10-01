@@ -49,7 +49,7 @@ pipeline {
 					agent { label "loadgen001" }
 					steps { launchLoadGen() }
 				}
-				stage('Load Controller') {
+				stage('Load Controller 3') {
 					agent { label "controller003" }
 					steps { launchPerfTest() }
 					post { always { publishViaSSH() } }
