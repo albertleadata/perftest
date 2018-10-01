@@ -13,15 +13,15 @@ sWWW = "http://canarydev:8080"
 bAlive = True
 
 def loadConfig( sCfgFile=".bluejayrc"):
-	global sHome
 	global sHost
 	global sApp
 	fCfg = open( sHome+"/"+sCfgFile, "r")
 	for sLine in fCfg:
 		pOpt = sLine.split( "=", 1)
-		if pOpt[0].rstrip() == "bluejay.locust.jns":
+		sKey = pOpt[0].rstrip()
+		if sKey == "bluejay.locust.jns":
 			sApp = pOpt[1].lstrip().rstrip()
-		elif pOpt[0].rstrip() == "bluejay.locust.dhn":
+		elif sKey == "bluejay.locust.dhn":
 			sHost = pOpt[1].lstrip().rstrip()
 
 def on_request_success( request_type, name, response_time, response_length):
@@ -46,7 +46,7 @@ def on_request_success( request_type, name, response_time, response_length):
 def on_quitting():
 	bAlive = False
 
-loadConfig
+loadConfig()
 pRTM = InfluxDBClient( sHost, 8086, 'jmeter', 'h0ckeypuck', 'bluejay')
 # Trying to create an existing database will fail ...
 #pRTM.create_database( 'bluejay')
