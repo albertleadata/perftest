@@ -5,7 +5,8 @@ from influxdb import InfluxDBClient
 #sys.path.append(os.getcwd())
 #import common.auth
 
-sHome = expanduser("~")
+#sHome = expanduser("~")
+sHome = "/opt/app-root"
 sHost = "bluejay"
 sApp = "bluejay"
 sWWW = "http://canarydev:8080"
