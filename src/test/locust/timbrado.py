@@ -5,7 +5,7 @@ from influxdb import InfluxDBClient
 #sys.path.append(os.getcwd())
 #import common.auth
 
-sHome=expanduser("~")
+sHome = expanduser("~")
 sHost = "bluejay"
 sApp = "bluejay"
 sWWW = "http://canarydev:8080"
@@ -24,6 +24,7 @@ def loadConfig( sCfgFile=".bluejayrc"):
 			sHost = pOpt[1].lstrip().rstrip()
 
 def on_request_success( request_type, name, response_time, response_length):
+	global pRTM
 	global sWWW
 	json_body = [ {
 		"measurement": "timbrado",
@@ -39,21 +40,22 @@ def on_request_success( request_type, name, response_time, response_length):
 			"txt": request_type
 		}
 	} ]
-	client.write_points( json_body)
+	pRTM.write_points( json_body)
 
 def on_quitting():
 	bAlive = False
 
 loadConfig
-client = InfluxDBClient( sHost, 8086, 'jmeter', 'h0ckeypuck', 'bluejay')
+pRTM = InfluxDBClient( sHost, 8086, 'jmeter', 'h0ckeypuck', 'bluejay')
 # Trying to create an existing database will fail ...
-#client.create_database( 'bluejay')
+#pRTM.create_database( 'bluejay')
 #events.request_success += on_request_success
 events.quitting += on_quitting
 
 class TestPlan( TaskSet):
 	@task
 	def default_task( self):
+		global pRTM
 		global bAlive
 		global sApp
 		while bAlive:
@@ -77,7 +79,7 @@ class TestPlan( TaskSet):
 					"txt": pReq.method
 				}
 			} ]
-			client.write_points( json_body)
+			pRTM.write_points( json_body)
 			time.sleep(0.768)
 
 class vUser( HttpLocust):
