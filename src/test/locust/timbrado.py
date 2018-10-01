@@ -13,6 +13,7 @@ bAlive = True
 
 def loadConfig( sCfgFile=".bluejayrc"):
 	global sHome
+	global sHost
 	global sApp
 	fCfg = open( sHome+"/"+sCfgFile, "r")
 	for sLine in fCfg:
