@@ -59,7 +59,7 @@ class TestPlan( TaskSet):
 		while bAlive:
 			pRsp = self.client.get( "/timbrado/portal?op=epsilon")
 			pReq = pRsp.request
-			sReq = pReq.method+' '+pReq.url+'\n'.join('{}: {}'.format(k, v) for k, v in pReq.headers.items())+pReq.body
+			sReq = pReq.method+' '+pReq.url+str('\n'.join('{}: {}'.format(k, v) for k, v in pReq.headers.items()))+str(pReq.body)
 			iErr = int(pRsp.status_code)
 			if iErr == 200:
 				iErr = 0
@@ -70,11 +70,11 @@ class TestPlan( TaskSet):
 					"agt": "locust",
 					"bytes": len(pRsp.content),
 					"err": iErr,
-					"rsp": int(pRsp.elapsed),
+					"rsp": pRsp.elapsed.microseconds/1000,
 					"sent": len(sReq),
 					"tst": "PoC",
 					"url": pRsp.url,
-					"txt": request_type
+					"txt": pReq.method
 				}
 			} ]
 			client.write_points( json_body)
