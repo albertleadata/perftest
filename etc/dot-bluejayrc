@@ -13,3 +13,6 @@ bluejay.locust.jns = timbrado
 bluejay.locust.dhn = bluejaydev
 bluejay.locust.adl = /var/www/lib
 bluejay.locust.www = http://localhost:18080/pub
+bluejay.locust.cvu = 8
+bluejay.locust.rvu = 2
+bluejay.locust.tds = 2m
