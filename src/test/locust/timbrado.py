@@ -13,6 +13,7 @@ bAlive = True
 
 def loadConfig( sCfgFile=".bluejayrc"):
 	global sHome
+	global sApp
 	fCfg = open( sHome+"/"+sCfgFile, "r")
 	for sLine in fCfg:
 		pOpt = sLine.split( "=", 1)
@@ -22,6 +23,7 @@ def loadConfig( sCfgFile=".bluejayrc"):
 			sHost = pOpt[1].lstrip().rstrip()
 
 def on_request_success( request_type, name, response_time, response_length):
+	global sWWW
 	json_body = [ {
 		"measurement": "timbrado",
 		"tags": { "async": "true" },
@@ -81,6 +83,7 @@ class TestPlan( TaskSet):
 			time.sleep(0.768)
 
 class vUser( HttpLocust):
+	global sHost
 	host = sHost
 	task_set = TestPlan
 	min_wait = 500
