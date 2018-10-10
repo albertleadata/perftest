@@ -3,7 +3,7 @@
 # Ignore run-time artifacts
 .settings*
 .project*
-# Ignore files with these extensions
+# Ignore anything with these extensions
 *.swp
 *.log
 # Ignore anything under these directories
