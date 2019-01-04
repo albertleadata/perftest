@@ -1,2 +1,2 @@
 #!/bin/bash
-if [ -f ./pom.xml ]; then cpu ./pom.xml ${HOME}/ ; fi
+if [ -f ./pom.xml ]; then cp ./pom.xml ${HOME}/ ; fi
