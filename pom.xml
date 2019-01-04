@@ -10,7 +10,7 @@
 		<encoding>UTF-8</encoding>
 		<scala.version>2.12.7</scala.version>
 		<gatling.version>3.0.1</gatling.version>
-		<scala-maven-plugin.version>3.3.1</scala-maven-plugin.version>
+		<scala-maven-plugin.version>3.4.4</scala-maven-plugin.version>
 		<gatling-maven-plugin.version>3.0.1</gatling-maven-plugin.version>
 	</properties>
 	<dependencyManagement>
@@ -60,7 +60,7 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>net.alchim21.maven</groupId>
+					<groupId>net.alchim31.maven</groupId>
 					<artifactId>scala-maven-plugin</artifactId>
 					<version>${scala-maven-plugin.version}</version>
 				</plugin>
