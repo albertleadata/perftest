@@ -52,7 +52,7 @@ class BluejaySimulation extends Simulation {
 			.post(uri2 + "")
 			.headers(headers_2)
 			.formParam("op", "alpha")
-			.formParam("Go", "Go")))
+			.formParam("Go", "Go"))
 
 	setUp(scn.inject(atOnceUsers(2),rampUsers(4) during (6 seconds),constantUsersPerSec(8) during (2 minutes))).protocols(httpProtocol)
 }
