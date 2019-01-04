@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function rptGen {
+	JWD=$(pwd)
+	JNS=${1}
+	RDN=${JNS}-$(date +%Y%d%m%H%M%S)
+	RLD=$(ls target/gatling | head -1)
+	if [ -d target/gatling/${RLD} ]; then
+		mkdir -p ${JWD}/reports/${RDN}
+		rsync -rltDOi target/gatling/${RLD}/ ${JWD}/reports/${RLD}/
+	#	zip ${JWD}/reports/${RLD}/results-bundle.zip results
+	fi
+}
+
+rptGen ${1}
