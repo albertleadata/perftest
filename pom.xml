@@ -61,15 +61,15 @@
 			<plugins>
 				<plugin>
 					<groupId>net.alchim21.maven</groupId>
-					<artifactId>scala.maven.plugin</artifactId>
-					<version>${scala.maven.plugin.version}</version>
+					<artifactId>scala-maven-plugin</artifactId>
+					<version>${scala-maven-plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>net.alchim21.maven</groupId>
-				<artifactId>scala.maven.plugin</artifactId>
+				<artifactId>scala-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<goals>
