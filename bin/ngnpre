@@ -1,2 +1,4 @@
 #!/bin/bash
-if [ -f ./pom.xml ]; then cp ./pom.xml ${HOME}/ ; fi
+echo "NFO=>>> pre-engine processing invoked ..."
+if [ -f ./pom.xml ]; then cp ./pom.xml /opt/app-root/ ; fi
+echo "NFO=>>> pre-engine processing complete."

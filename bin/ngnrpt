@@ -12,4 +12,6 @@ function rptGen {
 	fi
 }
 
+echo "NFO=>>> engine reporting callback invoked ..."
 rptGen ${1}
+echo "NFO=>>> engine reporting callback complete."
