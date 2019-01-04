@@ -54,5 +54,5 @@ class BluejaySimulation extends Simulation {
 			.formParam("op", "alpha")
 			.formParam("Go", "Go"))
 
-	setUp(scn.inject(atOnceUsers(2),rampUsers(4) during (6 seconds),constantUsersPerSec(4) during (8 minutes))).protocols(httpProtocol)
+	setUp(scn.inject(atOnceUsers(2),rampUsers(4) during (6 seconds),constantUsersPerSec(4) during (2 minutes))).protocols(httpProtocol)
 }
