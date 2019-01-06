@@ -77,6 +77,7 @@
 							<goal>testCompile</goal>
 						</goals>
 						<configuration>
+					<!--	<configFolder>/opt/app-root/etc/</configFolder> -->
 							<args>
 								<arg>-target:jvm-1.8</arg>
 								<arg>-deprecation</arg>

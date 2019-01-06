@@ -1,4 +1,10 @@
 #!/bin/bash
 echo "NFO=>>> pre-engine processing invoked ..."
-if [ -f ./pom.xml ]; then cp ./pom.xml /opt/app-root/ ; fi
+echo "NFO=>>> populating POM ..."
+if [ -f ./pom.xml ]; then
+	cp ./pom.xml /opt/app-root/
+	echo "NFO=>>> OK"
+else
+	echo "NFO=>>> no POM found"
+fi
 echo "NFO=>>> pre-engine processing complete."
