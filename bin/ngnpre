@@ -1,10 +1,15 @@
 #!/bin/bash
+HDL=/opt/app-root
+JNS=${1}
+DHN=${2}
 echo "NFO=>>> pre-engine processing invoked ..."
-echo "NFO=>>> populating POM ..."
 if [ -f ./pom.xml ]; then
-	cp ./pom.xml /opt/app-root/
+	echo "NFO=>>> populating POM ..."
+	cp ./pom.xml ${HDL}/
 	echo "NFO=>>> OK"
-else
-	echo "NFO=>>> no POM found"
+fi
+if [ -f ./etc/gatling.conf ]; then
+	echo "NFO=>>> populating Gatling config ..."
+	cat ./etc/gatling.conf | sed "s/__JNS__/${JNS}/g" | sed "s/__DHN__/${DHN}/g" > ${HDL}/src/test/resources/gatling.conf
 fi
 echo "NFO=>>> pre-engine processing complete."
