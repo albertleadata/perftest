@@ -8,8 +8,8 @@ if [ -f ./pom.xml ]; then
 	cp ./pom.xml ${HDL}/
 	echo "NFO=>>> OK"
 fi
-if [ -f ./etc/gatling.conf ]; then
+if [ -f ${HDL}/etc/gatling.conf ]; then
 	echo "NFO=>>> populating Gatling config ..."
-	cat ./etc/gatling.conf | sed "s/__JNS__/${JNS}/g" | sed "s/__DHN__/${DHN}/g" > ${HDL}/src/test/resources/gatling.conf
+	cat ${HDL}/etc/gatling.conf | sed "s/__JNS__/${JNS}/g" | sed "s/__DHN__/${DHN}/g" > ${HDL}/src/test/resources/gatling.conf
 fi
 echo "NFO=>>> pre-engine processing complete."
