@@ -1,5 +1,18 @@
 #!/bin/bash
+HOME=/opt/app-root
 TDL=${HOME}
+# Context ...
+echo "NFO=>>> ngnpre context ... =-=-=-=-=-=-=-=-=-=-="
+echo "NFO=>>> TDL=${TDL}, CWD=$(pwd)"
+echo "NFO=>>> ~/.bluejayrc:"
+cat ${HOME}/.bluejayrc
+echo "NFO=>>> ~/:"
+ls ${HOME}/
+echo "NFO=>>> TLD/src/:"
+ls ${TLD}/src
+echo "NFO=>>> TLD/target/:"
+ls ${TLD}/target
+echo "NFO=>>>  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 # Files ...
 #epe-jmeter/pom.xml
 #epe-jmeter/src/main/java/com/optum/jmeter/Engine.java
