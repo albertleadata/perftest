@@ -1,0 +1,17 @@
+#!/bin/bash
+TDL=${HOME}
+# Files ...
+#epe-jmeter/pom.xml
+#epe-jmeter/src/main/java/com/optum/jmeter/Engine.java
+#epe-jmeter/src/main/java/com/optum/constants/ApplicationConstants.java
+#epe-jmeter/src/main/resources/google.jmx
+#epe-jmeter/src/main/resources/logback.xml
+#epe-jmeter/src/main/resources/wspt.jks
+cp epe-jmeter/src/main/resources/*.jks ${TDL}/jmeter/bin/
+#epe-jmeter/src/main/resources/test.jmx
+#cp epe-jmeter/src/main/resources/jmeter.properties ${HOME}/jmeter/bin/
+#epe-jmeter/src/main/resources/application.conf
+#epe-jmeter/src/main/resources/ORXDDSStageV3.jmx
+#epe-jmeter/src/main/resources/ClaimSearchV4ByNPIHA4.csv
+cp epe-jmeter/src/main/resources/*.csv ${TDL}/jmeter/bin/
+cp epe-jmeter/src/main/resources/*.jmx ${TDL}/src/test/jmeter/
