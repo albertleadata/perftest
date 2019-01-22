@@ -5,13 +5,13 @@ TDL=${HOME}
 echo "NFO=>>> ngnpre context ... =-=-=-=-=-=-=-=-=-=-="
 echo "NFO=>>> TDL=${TDL}, CWD=$(pwd)"
 echo "NFO=>>> ~/.bluejayrc:"
-cat ${HOME}/.bluejayrc
+cat ${TDL}/.bluejayrc
 echo "NFO=>>> ~/:"
-ls ${HOME}/
-echo "NFO=>>> TLD/src/:"
-ls ${TLD}/src
-echo "NFO=>>> TLD/target/:"
-ls ${TLD}/target
+ls ${TDL}/
+echo "NFO=>>> TDL/src/:"
+ls ${TDL}/src
+echo "NFO=>>> TDL/target/:"
+ls ${TDL}/target
 echo "NFO=>>>  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 # Files ...
 #epe-jmeter/pom.xml
