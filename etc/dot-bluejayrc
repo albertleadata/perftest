@@ -1,6 +1,7 @@
 bluejay.jmeter.aid = 4
 bluejay.jmeter.jns = jarvis
 bluejay.jmeter.dhn = bluejaydev
+bluejay.jmeter.jhn = https://172.17.0.7
 bluejay.jmeter.adl = /var/www/lib
 bluejay.jmeter.www = http://localhost:18080/pub
 bluejay.maven.aid = 4
