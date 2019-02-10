@@ -1,31 +1,51 @@
 #!/bin/bash
-HOME=/opt/app-root
-TDL=${HOME}
-# Context ...
-echo "NFO=>>> ngnpre context ... =-=-=-=-=-=-=-=-=-=-="
-echo "NFO=>>> TDL=${TDL}, CWD=$(pwd)"
-echo "NFO=>>> ~/.bluejayrc:"
-cat ${TDL}/.bluejayrc
-echo "NFO=>>> ~/:"
-ls ${TDL}/
-echo "NFO=>>> TDL/src/:"
-ls ${TDL}/src
-echo "NFO=>>> TDL/target/:"
-ls ${TDL}/target
-echo "NFO=>>>  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-# Files ...
-#epe-jmeter/pom.xml
-#epe-jmeter/src/main/java/com/optum/jmeter/Engine.java
-#epe-jmeter/src/main/java/com/optum/constants/ApplicationConstants.java
-#epe-jmeter/src/main/resources/google.jmx
-#epe-jmeter/src/main/resources/logback.xml
-#epe-jmeter/src/main/resources/wspt.jks
-cp ./epe-jmeter/src/main/resources/*.jks ${TDL}/jmeter/bin/
-#epe-jmeter/src/main/resources/test.jmx
-#cp epe-jmeter/src/main/resources/jmeter.properties ${HOME}/jmeter/bin/
-#epe-jmeter/src/main/resources/application.conf
-#epe-jmeter/src/main/resources/ORXDDSStageV3.jmx
-#epe-jmeter/src/main/resources/ClaimSearchV4ByNPIHA4.csv
-cp ./epe-jmeter/src/main/resources/*.csv ${TDL}/jmeter/bin/
-mkdir -p ${TDL}/src/test/jmeter/
-cp ./epe-jmeter/src/main/resources/*.jmx ${TDL}/src/test/jmeter/
+HDL=/opt/app-root
+TDL=${HDL}
+NGN=${1}
+JNS=${2}
+DHN=${3}
+JHN=$(grep bluejay.${NGN}.jhn ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
+
+if [ "${JHN}" != "skip" ]; then
+	# Context ...
+	echo "NFO=>>> ngnpre context ... =-=-=-=-=-=-=-=-=-=-="
+	echo "NFO=>>> TDL=${TDL}, CWD=$(pwd)"
+	echo "NFO=>>> ~/.bluejayrc:"
+	cat ${TDL}/.bluejayrc
+	echo "NFO=>>> ~/:"
+	ls ${TDL}/
+	echo "NFO=>>> TDL/src/:"
+	ls ${TDL}/src
+	echo "NFO=>>> TDL/target/:"
+	ls ${TDL}/target
+	echo "NFO=>>>  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+	# Files ...
+	#epe-jmeter/pom.xml
+	#epe-jmeter/src/main/java/com/optum/jmeter/Engine.java
+	#epe-jmeter/src/main/java/com/optum/constants/ApplicationConstants.java
+	#epe-jmeter/src/main/resources/google.jmx
+	#epe-jmeter/src/main/resources/logback.xml
+	#epe-jmeter/src/main/resources/wspt.jks
+	cp ./epe-jmeter/src/main/resources/*.jks ${TDL}/jmeter/bin/
+	#epe-jmeter/src/main/resources/test.jmx
+	#cp epe-jmeter/src/main/resources/jmeter.properties ${HDL}/jmeter/bin/
+	#epe-jmeter/src/main/resources/application.conf
+	#epe-jmeter/src/main/resources/ORXDDSStageV3.jmx
+	#epe-jmeter/src/main/resources/ClaimSearchV4ByNPIHA4.csv
+	cp ./epe-jmeter/src/main/resources/*.csv ${TDL}/jmeter/bin/
+	mkdir -p ${TDL}/src/test/jmeter/
+	cp ./epe-jmeter/src/main/resources/*.jmx ${TDL}/src/test/jmeter/
+else
+	echo "NFO=>>> pre-engine processing invoked ..."
+	if [ -f ./pom.xml ]; then
+		echo "NFO=>>> populating POM ..."
+		cp ./pom.xml ${HDL}/
+		echo "NFO=>>> OK"
+	fi
+	if [ -f ${HDL}/etc/gatling.conf ]; then
+		echo "NFO=>>> populating Gatling config ..."
+		mkdir -p ${HDL}/src/test/resources
+		cat ${HDL}/etc/gatling.conf | sed "s/__JNS__/${JNS}/g" | sed "s/__DHN__/${DHN}/g" > ${HDL}/src/test/resources/gatling.conf
+	fi
+	echo "NFO=>>> pre-engine processing complete."
+fi
