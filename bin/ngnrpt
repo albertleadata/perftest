@@ -28,6 +28,8 @@ function rptGenGatlingJarvis {
 if [ "${JHN}" != "skip" ]; then
 	if [ "${NGN}" == "gatling" ]; then
 		rptGenGatlingJarvis
+	elif [ "${NGN}" == "maven" ]; then
+		rptGenMaven
 	else
 		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
 	fi
