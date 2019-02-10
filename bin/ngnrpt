@@ -10,9 +10,9 @@ function rptGenGatling {
 	JWD=$(pwd)
 	RDN=${JNS}-$(date +%Y%d%m%H%M%S)
 	echo "DBG=>>> target/gatling contents ..."
-	ls target/gatling
+	ls target/gatling/${JNS}
 	echo "DBG=>>> =-=-=-=-=-=-=-=-=-=-=-=-=-="
-	RLD=$(ls target/gatling | head -1)
+	RLD=$(ls target/gatling/${JNS} | head -1)
 	if [ -d target/gatling/${RLD} ]; then
 		mkdir -p ${JWD}/reports/${RDN}
 		rsync -rltDOi target/gatling/${RLD}/ ${JWD}/reports/${RLD}/
