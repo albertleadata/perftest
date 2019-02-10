@@ -460,7 +460,7 @@
             </elementProp>
             <elementProp name="AppName" elementType="Argument">
               <stringProp name="Argument.name">AppName</stringProp>
-              <stringProp name="Argument.value">jarvis</stringProp>
+              <stringProp name="Argument.value">gatpoc</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="TestName" elementType="Argument">
