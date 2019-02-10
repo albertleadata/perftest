@@ -6,13 +6,13 @@ JNS=${2}
 DHN=${3}
 JHN=$(grep bluejay.${NGN}.jhn ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
 
-function rptGenGatling {
+function rptGenMaven {
 	JWD=$(pwd)
 	RDN=${JNS}-$(date +%Y%d%m%H%M%S)
 	echo "DBG=>>> target/gatling contents ..."
-	ls target/gatling/${JNS}
+	ls target/gatling
 	echo "DBG=>>> =-=-=-=-=-=-=-=-=-=-=-=-=-="
-	RLD=$(ls target/gatling/${JNS} | head -1)
+	RLD=$(ls target/gatling | head -1)
 	if [ -d target/gatling/${RLD} ]; then
 		mkdir -p ${JWD}/reports/${RDN}
 		rsync -rltDOi target/gatling/${RLD}/ ${JWD}/reports/${RLD}/
@@ -32,10 +32,8 @@ if [ "${JHN}" != "skip" ]; then
 		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
 	fi
 else
-	if [ "${NGN}" == "gatling" ]; then
-		echo "NFO=>>> ${NGN} engine reporting callback invoked ..."
-		rptGenGatling
-		echo "NFO=>>> engine reporting callback complete."
+	if [ "${NGN}" == "maven" ]; then
+		rptGenMaven
 	else
 		echo "NFO=>>> ${NGN} engine reporting callback skipped (undefined)"
 	fi
