@@ -1,7 +1,7 @@
 bluejay.jmeter.aid = 9
 bluejay.jmeter.jns = jarvis
 bluejay.jmeter.dhn = bluejaydev
-bluejay.jmeter.jhn = http://172.17.0.7:8080
+bluejay.jmeter.jhn = http://172.17.0.5:8080
 bluejay.jmeter.adl = /var/www/lib
 bluejay.jmeter.www = http://localhost:18080/pub
 bluejay.maven.aid = 9
