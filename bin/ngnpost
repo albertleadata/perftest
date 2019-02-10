@@ -1,2 +1,22 @@
 #!/bin/bash
-echo "NFO=>>> no post-engine processing specified"
+HDL=/opt/app-root
+TDL=${HDL}
+NGN=${1}
+JNS=${2}
+DHN=${3}
+JHN=$(grep bluejay.${NGN}.jhn ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
+
+# Process based on profile's context (engine + origin/Jarvis)
+if [ "${JHN}" != "skip" ]; then
+	if [ "${NGN}" == "poc" ]; then
+		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis pending ..."
+	else
+		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
+	fi
+else
+	if [ "${NGN}" == "poc" ]; then
+		echo "NFO=>>> ${NGN} engine reporting callback pending ..."
+	else
+		echo "NFO=>>> ${NGN} engine reporting callback skipped (undefined)"
+	fi
+fi

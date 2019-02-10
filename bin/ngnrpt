@@ -1,8 +1,13 @@
 #!/bin/bash
+HDL=/opt/app-root
+TDL=${HDL}
+NGN=${1}
+JNS=${2}
+DHN=${3}
+JHN=$(grep bluejay.${NGN}.jhn ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
 
-function rptGen {
+function rptGenGatling {
 	JWD=$(pwd)
-	JNS=${1}
 	RDN=${JNS}-$(date +%Y%d%m%H%M%S)
 	RLD=$(ls target/gatling | head -1)
 	if [ -d target/gatling/${RLD} ]; then
@@ -12,6 +17,23 @@ function rptGen {
 	fi
 }
 
-echo "NFO=>>> engine reporting callback invoked ..."
-rptGen ${1}
-echo "NFO=>>> engine reporting callback complete."
+function rptGenGatlingJarvis {
+	echo "NFO=>>> ${NGN} engine reporting callback for Jarvis pending ..."
+}
+
+# Process based on profile's context (engine + origin/Jarvis)
+if [ "${JHN}" != "skip" ]; then
+	if [ "${NGN}" == "gatling" ]; then
+		rptGenGatlingJarvis
+	else
+		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
+	fi
+else
+	if [ "${NGN}" == "gatling" ]; then
+		echo "NFO=>>> ${NGN} engine reporting callback invoked ..."
+		rptGenGatling
+		echo "NFO=>>> engine reporting callback complete."
+	else
+		echo "NFO=>>> ${NGN} engine reporting callback skipped (undefined)"
+	fi
+fi
