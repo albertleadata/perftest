@@ -52,18 +52,26 @@ function preJMeterJarvis {
 	cp ./epe-jmeter/src/main/resources/*.jmx ${TDL}/src/test/jmeter/
 }
 
+function preMaven {
+	if [ -r pom.xml ]; then cp pom.xml ${HDL}/ ; fi
+}
+
 # Process based on profile's context (engine + origin/Jarvis)
 if [ "${JHN}" != "skip" ]; then
 	if [ "${NGN}" == "jmeter" -o "${NGN}" == "poc" ]; then
 		preJMeterJarvis
 	elif [ "${NGN}" == "gatling" ]; then
 		echo "NFO=>>> ${NGN} ngnpre for Jarvis pending ... =-=-=-=-=-=-=-=-=-=-="
+	elif [ "${NGN}" == "maven" ]; then
+		preMaven
 	else
 		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
 	fi
 else
 	if [ "${NGN}" == "gatling" ]; then
 		preGatling
+	elif [ "${NGN}" == "maven" ]; then
+		preMaven
 	else
 		echo "NFO=>>> ${NGN} engine reporting callback skipped (undefined)"
 	fi
