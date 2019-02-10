@@ -9,6 +9,9 @@ JHN=$(grep bluejay.${NGN}.jhn ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
 function rptGenGatling {
 	JWD=$(pwd)
 	RDN=${JNS}-$(date +%Y%d%m%H%M%S)
+	echo "DBG=>>> target/gatling contents ..."
+	ls target/gatling
+	echo "DBG=>>> =-=-=-=-=-=-=-=-=-=-=-=-=-="
 	RLD=$(ls target/gatling | head -1)
 	if [ -d target/gatling/${RLD} ]; then
 		mkdir -p ${JWD}/reports/${RDN}
