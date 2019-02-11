@@ -3,11 +3,7 @@ from __future__ import print_function
 from os.path import expanduser
 import sys
 import time
-import MySQLdb
 import json
-import ssl
-import urllib
-import urllib2
 
 sHome=expanduser("~")
 sHostURL='http://bluejayhost:8080'
