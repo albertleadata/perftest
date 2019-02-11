@@ -21,10 +21,15 @@ function rptGenMaven {
 }
 
 function rptGenGatlingJarvis {
-	echo "NFO=>>> ${NGN} engine reporting callback for Jarvis pending ..."
-	GSF=$(find . -type f | grep "global_stats.json" | head -1)
+	echo "DBG=>>> ngnrpt processing from $(PWD) (should be ${HDL}) ..."
+	GSF=$(find ${HDL}/reports -type f | grep "global_stats.json" | head -1)
+	echo "DBG=>>> ngnrpt - Gatling global_status.json detection: ${GSF}"
 	if [ -r "${GSF}" ]; then
+		echo "DBG=>>> ngnrpt - processing stats with ${GSF}, $(cat eid.txt), $(cat rpturl.txt)"
+		echo "DBG=>>> ngnrpt - using script $(ls -l ${HDL}/bin/bjrpt)"
 		${HDL}/bin/bjrpt --summary=${GSF} --test=$(cat eid.txt) --url="$(cat rpturl.txt)" > gatrsp.json
+		echo "DBG=>>> JSON payload:"
+		cat gatrsp.json
 	fi
 }
 
