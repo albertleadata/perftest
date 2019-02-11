@@ -22,6 +22,10 @@ function rptGenMaven {
 
 function rptGenGatlingJarvis {
 	echo "NFO=>>> ${NGN} engine reporting callback for Jarvis pending ..."
+	GSF=$(find . -type f | grep "global_stats.json" | head -1)
+	if [ -r "${GSF}" ]; then
+		${HDL}/bin/bjrpt --summary=${GSF} --test=$(cat eid.txt) --url="$(cat rpturl.txt)" > gatrsp.json
+	fi
 }
 
 # Process based on profile's context (engine + origin/Jarvis)
