@@ -4,7 +4,7 @@ TDL=${HDL}
 NGN=${1}
 JNS=${2}
 DHN=${3}
-JHN=$(grep bluejay.${NGN}.jhn ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
+JHN=$(grep bluejay.${NGN}.jhn ${HDL}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
 
 function rptGenMaven {
 	JWD=$(pwd)
@@ -21,7 +21,7 @@ function rptGenMaven {
 }
 
 function rptGenGatlingJarvis {
-	echo "DBG=>>> ngnrpt processing from $(PWD) (should be ${HDL}) ..."
+	echo "DBG=>>> ngnrpt processing from $(pwd) (should be ${HDL}) ..."
 	GSF=$(find ${HDL}/reports -type f | grep "global_stats.json" | head -1)
 	echo "DBG=>>> ngnrpt - Gatling global_status.json detection: ${GSF}"
 	if [ -r "${GSF}" ]; then
@@ -36,7 +36,7 @@ function rptGenGatlingJarvis {
 # Process based on profile's context (engine + origin/Jarvis)
 if [ "${JHN}" != "skip" ]; then
 	if [ "${NGN}" == "gatling" ]; then
-		rptGenGatlingJarvis
+		if [ "${DHN}" == "post" ]; then rptGenGatlingJarvis ; fi
 	elif [ "${NGN}" == "maven" ]; then
 		rptGenMaven
 	else

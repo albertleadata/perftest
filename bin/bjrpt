@@ -1,8 +1,6 @@
 #!/usr/bin/python
 from __future__ import print_function
 from os.path import expanduser
-from jenkinsapi.jenkins import Jenkins
-from jenkinsapi.utils.crumb_requester import CrumbRequester
 import sys
 import time
 import MySQLdb
