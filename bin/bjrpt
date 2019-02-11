@@ -35,7 +35,7 @@ def loadConfig( sCfgFile=".bluejayrc"):
 
 def genRptSummary( sFile, lTst, sURL):
 	with open( sFile, "r") as fJSON:
-		sJSON = "{\"op\":\"teststatus\",\"id\":\""+str(lTst)+"\",\"status\":\"TEST_PUBLISHED\",\"rpturl\":\""+sURL+"\""
+		sJSON = "{\"op\":\"teststatus\",\"id\":"+str(lTst)+",\"status\":\"TEST_PUBLISHED\",\"rpturl\":\""+sURL+"\""
 		pData = json.load( fJSON)
 		sItm = "\"ttl\":"+str(pData['numberOfRequests']['total'])
 		sJSON += ","+sItm
