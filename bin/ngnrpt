@@ -38,7 +38,11 @@ if [ "${JHN}" != "skip" ]; then
 	if [ "${NGN}" == "gatling" ]; then
 		if [ "${DHN}" == "post" ]; then rptGenGatlingJarvis ; fi
 	elif [ "${NGN}" == "maven" ]; then
-		rptGenMaven
+		if [ "${DHN}" == "post" ]; then
+			rptGenGatlingJarvis
+		else
+			rptGenMaven
+		fi
 	else
 		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
 	fi
