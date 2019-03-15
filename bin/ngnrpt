@@ -58,5 +58,6 @@ if [ "${PFM}" != "xaas" ]; then
 		fi
 	fi
 else
-	rsync -rltDOi ./ $(cat ../rpturl.txt)/
+	DHN=$(grep bluejay.db.host ${HDL}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
+	rsync -rltDOi ./ ${DHN}:/var/www/html/pub/bluejay/jmeter/
 fi
