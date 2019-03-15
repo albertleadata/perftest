@@ -5,6 +5,7 @@ NGN=${1}
 JNS=${2}
 DHN=${3}
 JHN=$(grep bluejay.${NGN}.jhn ${HDL}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
+PFM=$(cat ngn.txt)
 
 function rptGenMaven {
 	JWD=$(pwd)
@@ -34,22 +35,28 @@ function rptGenGatlingJarvis {
 }
 
 # Process based on profile's context (engine + origin/Jarvis)
-if [ "${JHN}" != "skip" ]; then
-	if [ "${NGN}" == "gatling" ]; then
-		if [ "${DHN}" == "post" ]; then rptGenGatlingJarvis ; fi
-	elif [ "${NGN}" == "maven" ]; then
-		if [ "${DHN}" == "post" ]; then
-			rptGenGatlingJarvis
+
+
+if [ "${PFM}" != "xaas" ]; then
+	if [ "${JHN}" != "skip" ]; then
+		if [ "${NGN}" == "gatling" ]; then
+			if [ "${DHN}" == "post" ]; then rptGenGatlingJarvis ; fi
+		elif [ "${NGN}" == "maven" ]; then
+			if [ "${DHN}" == "post" ]; then
+				rptGenGatlingJarvis
+			else
+				rptGenMaven
+			fi
 		else
-			rptGenMaven
+			echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
 		fi
 	else
-		echo "NFO=>>> ${NGN} engine reporting callback for Jarvis skipped (undefined)"
+		if [ "${NGN}" == "maven" ]; then
+			rptGenMaven
+		else
+			echo "NFO=>>> ${NGN} engine reporting callback skipped (undefined)"
+		fi
 	fi
 else
-	if [ "${NGN}" == "maven" ]; then
-		rptGenMaven
-	else
-		echo "NFO=>>> ${NGN} engine reporting callback skipped (undefined)"
-	fi
+	rsync -rltDOi ./ $(cat ../rpturl.txt)/
 fi
