@@ -58,6 +58,6 @@ if [ "${PFM}" != "xaas" ]; then
 		fi
 	fi
 else
-	DHN=$(grep bluejay.db.host ${HDL}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
+	DHN=$(grep bluejay.db.host ${HOME}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
 	rsync -rltDOi ./ ${DHN}:/var/www/html/pub/bluejay/jmeter/
 fi
