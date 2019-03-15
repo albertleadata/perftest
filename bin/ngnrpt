@@ -5,7 +5,7 @@ NGN=${1}
 JNS=${2}
 DHN=${3}
 JHN=$(grep bluejay.${NGN}.jhn ${HDL}/.bluejayrc | cut -d= -f2 | sed "s/  *//g")
-PFM=$(cat ngn.txt)
+PFM=$(cat ../ngn.txt)
 
 function rptGenMaven {
 	JWD=$(pwd)
