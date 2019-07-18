@@ -440,7 +440,7 @@
           <stringProp name="TestPlan.comments">Simply pause to keep the testing window open</stringProp>
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
-          <stringProp name="ActionProcessor.duration">300000</stringProp>
+          <stringProp name="ActionProcessor.duration">120000</stringProp>
         </TestAction>
         <hashTree/>
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Close window to end test" enabled="true">
