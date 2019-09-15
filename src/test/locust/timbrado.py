@@ -44,10 +44,13 @@ def on_request_success( request_type, name, response_time, response_length):
 	pRTM.write_points( json_body)
 
 def on_quitting():
+	global fRTM
 	bAlive = False
+	fRTM.close()
 
 loadConfig()
 pRTM = InfluxDBClient( sHost, 8086, 'jmeter', 'h0ckeypuck', 'bluejay')
+fRTM = open( 'txn.csv', 'w')
 # Trying to create an existing database will fail ...
 #pRTM.create_database( 'bluejay')
 #events.request_success += on_request_success
@@ -57,6 +60,7 @@ class TestPlan( TaskSet):
 	@task
 	def default_task( self):
 		global pRTM
+		global fRTM
 		global bAlive
 		global sApp
 		while bAlive:
@@ -66,21 +70,27 @@ class TestPlan( TaskSet):
 			iErr = int(pRsp.status_code)
 			if iErr == 200:
 				iErr = 0
+			iLen = len(pRsp.content)
+			iSz = len(sReq)
+			iRsp = pRsp.elapsed.microseconds/1000
+			sTst = 'locust';
 			json_body = [ {
 				"measurement": sApp,
 				"tags": { "async": "true" },
 				"fields": {
 					"agt": "locust",
-					"bytes": len(pRsp.content),
+					"bytes": iLen,
 					"err": iErr,
-					"rsp": pRsp.elapsed.microseconds/1000,
-					"sent": len(sReq),
-					"tst": "PoC",
+					"rsp": iRsp,
+					"sent": iSz,
+					"tst": sTst,
 					"url": pRsp.url,
 					"txt": pReq.method
 				}
 			} ]
 			pRTM.write_points( json_body)
+			sRow = sTm+','+str(iLen)+','+str(iErr)+','+iRsp+','+iSz+','+sTst+','+pRsp.url+','+pReq.method
+			fRTM.write( sRow)
 			time.sleep(0.768)
 
 class vUser( HttpLocust):
