@@ -74,6 +74,8 @@ class TestPlan( TaskSet):
 			iSz = len(sReq)
 			iRsp = pRsp.elapsed.microseconds/1000
 			sTst = 'locust';
+			sURL = pRsp.url
+			sMtd = pReq.method
 			json_body = [ {
 				"measurement": sApp,
 				"tags": { "async": "true" },
@@ -89,7 +91,7 @@ class TestPlan( TaskSet):
 				}
 			} ]
 			pRTM.write_points( json_body)
-			sRow = sTm+','+str(iLen)+','+str(iErr)+','+iRsp+','+iSz+','+sTst+','+pRsp.url+','+pReq.method
+			sRow = str(time.time())+','+sTst+','+str(iRsp)+','+str(iErr)+','+str(iLen)+','+str(iSz)+','+sURL.replace(',',';')+','+sMtd.replace(',',';')
 			fRTM.write( sRow)
 			time.sleep(0.768)
 
