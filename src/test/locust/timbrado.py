@@ -8,7 +8,7 @@ from influxdb import InfluxDBClient
 #sHome = expanduser("~")
 sHome = "/opt/app-root"
 sHost = "influx"
-sApp = "bluejay"
+sApp = "timbrado"
 sWWW = "http://timbrado:8080"
 bAlive = True
 
