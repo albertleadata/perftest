@@ -9,7 +9,7 @@ from influxdb import InfluxDBClient
 sHome = "/opt/app-root"
 sHost = "bluejay"
 sApp = "bluejay"
-sWWW = "http://canarydev:8080"
+sWWW = "http://timbrado:8080"
 bAlive = True
 
 def loadConfig( sCfgFile=".bluejayrc"):
