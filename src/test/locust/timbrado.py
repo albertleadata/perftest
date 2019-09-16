@@ -14,14 +14,11 @@ bAlive = True
 
 def loadConfig( sCfgFile=".bluejayrc"):
 	global sHost
-	global sApp
 	fCfg = open( sHome+"/"+sCfgFile, "r")
 	for sLine in fCfg:
 		pOpt = sLine.split( "=", 1)
 		sKey = pOpt[0].rstrip()
-		if sKey == "bluejay.locust.jns":
-			sApp = pOpt[1].lstrip().rstrip()
-		elif sKey == "bluejay.locust.dhn":
+		if sKey == "bluejay.influx.host":
 			sHost = pOpt[1].lstrip().rstrip()
 
 def on_request_success( request_type, name, response_time, response_length):
