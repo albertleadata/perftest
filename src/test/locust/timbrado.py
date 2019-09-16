@@ -7,7 +7,7 @@ from influxdb import InfluxDBClient
 
 #sHome = expanduser("~")
 sHome = "/opt/app-root"
-sHost = "bluejay"
+sHost = "influx"
 sApp = "bluejay"
 sWWW = "http://timbrado:8080"
 bAlive = True
@@ -91,7 +91,7 @@ class TestPlan( TaskSet):
 				}
 			} ]
 			pRTM.write_points( json_body)
-			sRow = str(time.time())+','+sTst+','+str(iRsp)+','+str(iErr)+','+str(iLen)+','+str(iSz)+','+sURL.replace(',',';')+','+sMtd.replace(',',';')
+			sRow = str(time.time())+','+sTst+','+str(iRsp)+','+str(iErr)+','+str(iLen)+','+str(iSz)+','+sURL.replace(',',';')+','+sMtd.replace(',',';')+'\n'
 			fRTM.write( sRow)
 			time.sleep(0.768)
 
