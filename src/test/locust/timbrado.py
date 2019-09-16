@@ -91,9 +91,10 @@ class TestPlan( TaskSet):
 				}
 			} ]
 			pRTM.write_points( json_body)
-			sRow = str(time.time())+','+sTst+','+str(iRsp)+','+str(iErr)+','+str(iLen)+','+str(iSz)+','+sURL.replace(',',';')+','+sMtd.replace(',',';')+'\n'
-			fRTM.write( sRow)
-			time.sleep(0.768)
+			sRow = str(time.time())+','+sMtd.replace(',',';')+','+str(iRsp)+','+str(iErr)+','+str(iLen)+','+str(iSz)+','+sURL.replace(',',';')
+			fRTM.write( sRow+'\n')
+		#	time.sleep(0.768)
+			time.sleep(0.128)
 
 class vUser( HttpLocust):
 	global sWWW
