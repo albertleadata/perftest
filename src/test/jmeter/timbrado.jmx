@@ -465,17 +465,17 @@
             </elementProp>
             <elementProp name="TestName" elementType="Argument">
               <stringProp name="Argument.name">TestName</stringProp>
-              <stringProp name="Argument.value">PoC</stringProp>
+              <stringProp name="Argument.value">timbrado.jmx</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="Agent" elementType="Argument">
               <stringProp name="Argument.name">Agent</stringProp>
-              <stringProp name="Argument.value">jenkins</stringProp>
+              <stringProp name="Argument.value">jmeter</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="InfluxHost" elementType="Argument">
               <stringProp name="Argument.name">InfluxHost</stringProp>
-              <stringProp name="Argument.value">bluejaydev</stringProp>
+              <stringProp name="Argument.value">influx</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="InfluxName" elementType="Argument">
