@@ -5,8 +5,8 @@ from influxdb import InfluxDBClient
 #sys.path.append(os.getcwd())
 #import common.auth
 
-#sHome = expanduser("~")
-sHome = "/opt/app-root"
+sHome = expanduser("~")
+#sHome = "/opt/app-root"
 sHost = "bluejay"
 sApp = "timbrado"
 sWWW = "http://timbrado:8080"
