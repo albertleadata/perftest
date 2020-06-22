@@ -6,6 +6,7 @@
 # Ignore anything with these extensions
 *.swp
 *.log
+*.class
 # Ignore anything under these directories
 xfr*
 log*
