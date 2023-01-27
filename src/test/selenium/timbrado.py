@@ -31,6 +31,6 @@ if __name__ == '__main__':
 		testTxnAlpha()
 		time.sleep(1.0)
 		tNow = datetime.datetime.now().timestamp()
-		if tNow - tStart > 10.0:
+		if tNow - tStart > 120.0:
 			bDone = True
 	driver.quit()
