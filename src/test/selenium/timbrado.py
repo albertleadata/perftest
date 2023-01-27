@@ -26,11 +26,11 @@ def testTxnAlpha():
 
 if __name__ == '__main__':
 	chromeopts = Options()
-#	chromeopts.add_argument("--disable-extensions")
-#	chromeopts.add_argument("--disable-gpu")
-#	chromeopts.add_argument("--no-sandbox")
+	chromeopts.add_argument("--disable-extensions")
+	chromeopts.add_argument("--disable-gpu")
+	chromeopts.add_argument("--no-sandbox")
 	chromeopts.add_argument("--headless")
-	driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver",options=chromeopts)
+	driver = webdriver.Chrome(options=chromeopts)
 	tStart  = datetime.datetime.now().timestamp()
 	bDone = False
 	while not bDone:
