@@ -4,6 +4,7 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
 def nowTS():
 	date_time = datetime.datetime(2022, 6, 3, 12, 0, 50)
@@ -24,7 +25,12 @@ def testTxnAlpha():
 #	assert value == "Received!"
 
 if __name__ == '__main__':
-	driver = webdriver.Chrome()
+	chromeopts = Options()
+#	chromeopts.add_argument("--disable-extensions")
+#	chromeopts.add_argument("--disable-gpu")
+#	chromeopts.add_argument("--no-sandbox")
+	chromeopts.add_argument("--headless")
+	driver = webdriver.Chrome(options=chromeopts)
 	tStart  = datetime.datetime.now().timestamp()
 	bDone = False
 	while not bDone:
