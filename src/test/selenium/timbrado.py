@@ -30,7 +30,7 @@ if __name__ == '__main__':
 #	chromeopts.add_argument("--disable-gpu")
 #	chromeopts.add_argument("--no-sandbox")
 	chromeopts.add_argument("--headless")
-	driver = webdriver.Chrome(options=chromeopts)
+	driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver",options=chromeopts)
 	tStart  = datetime.datetime.now().timestamp()
 	bDone = False
 	while not bDone:
